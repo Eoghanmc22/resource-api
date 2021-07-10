@@ -19,7 +19,7 @@ public class ResourceApi {
         return resourceType.lookup(namespaceID);
     }
 
-    public static GeneratedResourcePack generateResourcePack() {
+    public static @NotNull GeneratedResourcePack generateResourcePack() {
         GeneratedResourcePack resourcePack = new GeneratedResourcePack();
 
         resourceTypesUsed.forEach(resourceType -> resourceType.generateResourcePack(resourcePack));

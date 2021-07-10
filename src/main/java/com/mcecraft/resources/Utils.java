@@ -1,5 +1,7 @@
 package com.mcecraft.resources;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 public class Utils {
 
     //https://www.geeksforgeeks.org/sha-1-hash-in-java/
-    public static String hash(byte[] resourcePack) {
+    public static @NotNull String hash(byte[] resourcePack) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
 

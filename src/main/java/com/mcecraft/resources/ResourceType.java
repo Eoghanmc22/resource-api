@@ -20,11 +20,11 @@ public abstract class ResourceType<T extends Resource> {
         return builderSupplier;
     }
 
-    protected void register(ResourceBuilder<T> builder, T resource) {
+    protected void register(@NotNull ResourceBuilder<T> builder, @NotNull T resource) {
         registeredResources.put(builder.getNamespaceID(), resource);
     }
 
-    protected abstract void generateResourcePack(GeneratedResourcePack resourcePack);
+    protected abstract void generateResourcePack(@NotNull GeneratedResourcePack resourcePack);
 
     public @Nullable T lookup(@NotNull NamespaceID namespaceID) {
         return registeredResources.get(namespaceID);

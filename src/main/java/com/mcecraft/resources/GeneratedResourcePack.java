@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,8 +20,8 @@ public class GeneratedResourcePack {
     private static final Gson GSON = new GsonBuilder().create();
 
     private final Map<String, String> resourcePackFiles = new ConcurrentHashMap<>();
-    private volatile byte[] bytes = null;
-    private volatile String hash = null;
+    private volatile byte @Nullable [] bytes = null;
+    private volatile @Nullable String hash = null;
 
     public void include(@NotNull String path, @NotNull String text) {
         resourcePackFiles.put(path, text);
@@ -44,7 +45,7 @@ public class GeneratedResourcePack {
         resourcePackFiles.put(path, GSON.toJson(obj));
     }
 
-    private byte[] generate() {
+    private byte @Nullable [] generate() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
@@ -67,7 +68,7 @@ public class GeneratedResourcePack {
         return bytes;
     }
 
-    public synchronized byte[] getBytes() {
+    public synchronized byte @Nullable [] getBytes() {
         if (bytes == null) {
             return generate();
         } else {
@@ -76,11 +77,13 @@ public class GeneratedResourcePack {
     }
 
     private @NotNull String genHash() {
-        hash = Utils.hash(getBytes());
+        String hash = Utils.hash(getBytes());
+        this.hash = hash;
         return hash;
     }
 
     public synchronized @NotNull String getHash() {
+        String hash = this.hash;
         if (hash == null) {
             return genHash();
         } else {
