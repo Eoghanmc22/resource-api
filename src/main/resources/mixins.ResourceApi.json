@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.mcecraft.resources.mixins.injects",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_11",
+  "mixins": [
+
+  ]
+}
