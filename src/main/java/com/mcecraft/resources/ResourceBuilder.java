@@ -2,6 +2,7 @@ package com.mcecraft.resources;
 
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
+import com.mcecraft.resources.traits.Resource;
 
 public abstract class ResourceBuilder<T extends Resource> {
 

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.mcecraft.resources.traits.StoreWithGson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

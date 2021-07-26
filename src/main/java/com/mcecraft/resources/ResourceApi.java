@@ -3,6 +3,7 @@ package com.mcecraft.resources;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.mcecraft.resources.traits.Resource;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
