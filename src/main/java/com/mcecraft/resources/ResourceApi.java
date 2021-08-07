@@ -3,28 +3,72 @@ package com.mcecraft.resources;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.mcecraft.resources.traits.Resource;
 
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
 public class ResourceApi {
-    private static final Set<ResourceType<?>> resourceTypesUsed = ConcurrentHashMap.newKeySet();
+    private static final Map<ResourceType<?, ?>, ResourceContainer<?, ?>> resourceTypes = new ConcurrentHashMap<>();
+    private static final Set<Resource> resources = ConcurrentHashMap.newKeySet();
 
-    public static <T extends Resource> @NotNull ResourceBuilder<T> create(@NotNull ResourceType<T> resourceType, @NotNull NamespaceID namespaceID) {
-        resourceTypesUsed.add(resourceType);
-        return resourceType.getBuilderSupplier().apply(namespaceID).setResourceType(resourceType);
+    public static <R extends Resource, B extends ResourceBuilder<R>> @NotNull B create(@NotNull ResourceType<R, B> resourceType, @NotNull NamespaceID namespaceID) {
+        return resourceType.makeBuilder(namespaceID);
     }
 
-    public static <T extends Resource> @Nullable T lookup(@NotNull ResourceType<T> resourceType, @NotNull NamespaceID namespaceID) {
-        return resourceType.lookup(namespaceID);
+    public static <R extends Resource> @Nullable R lookup(@NotNull ResourceType<R, ?> resourceType, @NotNull NamespaceID namespaceID) {
+        return (R) resourceTypes.get(resourceType).lookup(namespaceID);
+    }
+
+    static <R extends Resource> void register(@NotNull ResourceType<R, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull R resource) {
+        final ResourceContainer<R, ?> resourceContainer = (ResourceContainer<R, ?>) resourceTypes.computeIfAbsent(resourceType, resourceType1 -> new ResourceContainer<>(resourceType1));
+        resourceContainer.register(namespaceID, resource);
+        resources.add(resource);
     }
 
     public static @NotNull GeneratedResourcePack generateResourcePack() {
         GeneratedResourcePack resourcePack = new GeneratedResourcePack();
 
-        resourceTypesUsed.forEach(resourceType -> resourceType.generateResourcePack(resourcePack));
+        Map<ResourceType<?, ?>, Generator> generatorMap = new HashMap<>();
+
+        Queue<Resource> queue = new LinkedList<>(resources);
+
+        while (queue.peek() != null) {
+            Resource resource = queue.poll();
+
+            final Generator generator = generatorMap.computeIfAbsent(resource.getResourceType(), ResourceType::createGenerator);
+
+            final Set<Resource> newResources = generator.add(resource);
+            if (newResources != null) {
+                queue.addAll(newResources);
+            }
+        }
+        generatorMap.forEach((resourceType, generator) -> generator.generate(resourcePack));
 
         return resourcePack;
+    }
+
+    private static class ResourceContainer<R extends Resource, B extends ResourceBuilder<R>> {
+        private final ResourceType<R, B> resourceType;
+        private final Map<NamespaceID, R> registeredResources = new ConcurrentHashMap<>();
+
+        private ResourceContainer(ResourceType<R, B> resourceType) {
+            this.resourceType = resourceType;
+        }
+
+        public ResourceType<R, B> getResourceType() {
+            return resourceType;
+        }
+
+        public R lookup(NamespaceID id) {
+            return registeredResources.get(id);
+        }
+
+        public void register(NamespaceID id, R resource) {
+            registeredResources.put(id, resource);
+        }
+
+        public Map<NamespaceID, R> getRegisteredResources() {
+            return registeredResources;
+        }
+
     }
 }

@@ -8,24 +8,41 @@ import org.jetbrains.annotations.Nullable;
 import com.mcecraft.resources.traits.StoreWithGson;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class GeneratedResourcePack {
-    private static final Gson GSON = new GsonBuilder().create();
+    private static final Gson GSON = Utils.GSON;
 
-    private final Map<String, String> resourcePackFiles = new ConcurrentHashMap<>();
+    private final Set<String> usedPaths = ConcurrentHashMap.newKeySet();
+    private final Map<String, byte[]> resourcePackGeneratedFiles = new ConcurrentHashMap<>();
+    private final Map<String, File> resourcePackIncludedFiles = new ConcurrentHashMap<>();
     private volatile byte @Nullable [] bytes = null;
     private volatile @Nullable String hash = null;
 
+    private void addPath(@NotNull String path) {
+        if (!usedPaths.add(path)) {
+            throw new RuntimeException("Duplicate file in resource pack!");
+        }
+    }
+
+
+    public void include(@NotNull String path, byte @NotNull [] data) {
+        addPath(path);
+        resourcePackGeneratedFiles.put(path, data);
+    }
+
     public void include(@NotNull String path, @NotNull String text) {
-        resourcePackFiles.put(path, text);
+       include(path, text.getBytes(StandardCharsets.UTF_8));
     }
 
     public void include(@NotNull String path, @NotNull List<@NotNull String> text) {
@@ -39,37 +56,62 @@ public class GeneratedResourcePack {
     }
 
     public void include(@NotNull String path, @NotNull StoreWithGson obj) {
-        resourcePackFiles.put(path, GSON.toJson(obj));
+        include(path, GSON.toJson(obj));
     }
 
     public void include(@NotNull String path, @NotNull JsonElement obj) {
-        resourcePackFiles.put(path, GSON.toJson(obj));
+        include(path, GSON.toJson(obj));
     }
 
-    private byte @Nullable [] generate() {
+
+    public void includeFile(@NotNull String path, @NotNull File file) {
+        addPath(path);
+        resourcePackIncludedFiles.put(path, file);
+    }
+
+    public void includeFile(@NotNull String path, @NotNull String file) {
+        includeFile(path, new File(file));
+    }
+
+
+    private byte @NotNull [] generate() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
             zipOutputStream.setLevel(9);
 
-            for (Map.Entry<String, String> stringStringEntry : resourcePackFiles.entrySet()) {
+            for (Map.Entry<String, byte[]> stringStringEntry : resourcePackGeneratedFiles.entrySet()) {
                 String path = stringStringEntry.getKey();
-                String contents = stringStringEntry.getValue();
+                byte[] contents = stringStringEntry.getValue();
 
                 zipOutputStream.putNextEntry(new ZipEntry(path));
-                zipOutputStream.write(contents.getBytes(StandardCharsets.UTF_8));
+                zipOutputStream.write(contents);
             }
+
+            for (Map.Entry<String, File> stringFileEntry : resourcePackIncludedFiles.entrySet()) {
+                String path = stringFileEntry.getKey();
+                File file = stringFileEntry.getValue();
+
+                try (final FileInputStream inputStream = new FileInputStream(file)) {
+                    zipOutputStream.putNextEntry(new ZipEntry(path));
+                    zipOutputStream.write(inputStream.readAllBytes());
+                }
+            }
+
             zipOutputStream.closeEntry();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        resourcePackFiles.clear();
-        bytes = byteArrayOutputStream.toByteArray();
+        final byte[] bytes = byteArrayOutputStream.toByteArray();
+
+        this.bytes = bytes;
+
         return bytes;
     }
 
-    public synchronized byte @Nullable [] getBytes() {
+    public synchronized byte @NotNull [] getBytes() {
+        final byte[] bytes = this.bytes;
         if (bytes == null) {
             return generate();
         } else {
@@ -93,7 +135,9 @@ public class GeneratedResourcePack {
     }
 
     public void reset() {
-        resourcePackFiles.clear();
+        usedPaths.clear();
+        resourcePackGeneratedFiles.clear();
+        resourcePackIncludedFiles.clear();
         bytes = null;
         hash = null;
     }
