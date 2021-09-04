@@ -2,35 +2,36 @@ package com.mcecraft.resources;
 
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
-import com.mcecraft.resources.traits.Resource;
 
-public abstract class ResourceBuilder<T extends Resource> {
+public abstract class ResourceBuilder<R extends Resource> {
 
     private final @NotNull NamespaceID namespaceID;
-    private ResourceType<T> resourceType;
+    private final ResourceType<R, ?> resourceType;
 
-    public ResourceBuilder(@NotNull final NamespaceID namespaceID) {
+    protected ResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<R, ?> resourceType) {
         this.namespaceID = namespaceID;
+        this.resourceType = resourceType;
     }
 
-    public final @NotNull T build() {
-        T resource = buildImpl();
-        getResourceType().register(this, resource);
+    public final @NotNull R build() {
+        return build(true);
+    }
+
+    public final @NotNull R build(boolean register) {
+        R resource = buildImpl();
+        if (register) {
+            ResourceApi.register(getResourceType(), getNamespaceID(), resource);
+        }
         return resource;
     }
 
-    protected abstract @NotNull T buildImpl();
+    protected abstract @NotNull R buildImpl();
 
     public @NotNull NamespaceID getNamespaceID() {
         return namespaceID;
     }
 
-    public ResourceType<T> getResourceType() {
+    public ResourceType<R, ?> getResourceType() {
         return resourceType;
-    }
-
-    @NotNull ResourceBuilder<T> setResourceType(@NotNull ResourceType<T> resourceType) {
-        this.resourceType = resourceType;
-        return this;
     }
 }
