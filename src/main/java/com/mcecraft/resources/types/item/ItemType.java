@@ -1,17 +1,16 @@
 package com.mcecraft.resources.types.item;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mcecraft.resources.*;
 import com.mcecraft.resources.types.include.IncludeType;
-import com.mcecraft.resources.types.include.IncludedResourceBuilder;
+import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-//Todo
 public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder> {
 
 	public static final ItemType INSTANCE = new ItemType();
@@ -24,34 +23,58 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 	}
 
 	@Override
-	public @NotNull Generator createGenerator() {
-		return new Generator() {
+	public @NotNull Generator<ItemResource> createGenerator() {
+		return new Generator<>() {
 
-			Set<ItemResource> resources = new HashSet<>();
+			final Map<Material, Set<ItemResource>> resources = new HashMap<>();
 
 			@Override
-			public @Nullable Set<Resource> add(@NotNull Object resource1) {
-				final ItemResource resource = (ItemResource) resource1;
-				resources.add(resource);
+			public @NotNull Collection<? extends Resource> dependencies(@NotNull ItemResource resource) {
+				resources.computeIfAbsent(resource.getMaterial(), (key) -> new HashSet<>()).add(resource);
 
-				Set<Resource> includes = new HashSet<>();
+				Set<Resource> includes = new HashSet<>(resource.getIncludes());
 
-				for (IncludedResourceBuilder include : resource.getIncludes()) {
-					includes.add(include.build(false));
-				}
-
-				//todo generate the item's model (prob in generate method) and add custom model data and make it persist
-				if (resource.getJsonModel() != null) {
-					includes.add(ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL).json())
-				}
+				NamespaceID id = resource.getNamespaceID();
+				includes.add(
+						ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)
+								.json(
+										Utils.resourcePath(id, Utils.MODELS),
+										resource.getModelProvider().get()
+								)
+								.build(false)
+				);
 
 				return includes;
 			}
 
 			@Override
 			public void generate(@NotNull GeneratedResourcePack rp) {
-				for (ItemResource resource : resources) {
+				for (Map.Entry<Material, Set<ItemResource>> entry : resources.entrySet()) {
+					Material material = entry.getKey();
+					Set<ItemResource> resources = entry.getValue();
+					// 0 is the default item
+					int cmiCounter = 1;
+					NamespaceID namespace = Utils.prefixPath(material.namespace(), "item/");
 
+					JsonObject json = new JsonObject();
+
+					JsonArray overrides = new JsonArray();
+					for (ItemResource itemResource : resources) {
+						itemResource.setCustomModelId(cmiCounter);
+
+						JsonObject override = new JsonObject();
+
+						JsonObject predicate = new JsonObject();
+						predicate.add("custom_model_data", new JsonPrimitive(cmiCounter++));
+						override.add("predicate", predicate);
+
+						override.add("model", new JsonPrimitive(itemResource.getNamespaceID().asString()));
+
+						overrides.add(override);
+					}
+					json.add("overrides", overrides);
+
+					rp.include(Utils.resourcePath(namespace, Utils.MODELS), json);
 				}
 			}
 		};

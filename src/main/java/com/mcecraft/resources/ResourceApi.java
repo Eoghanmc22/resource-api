@@ -19,27 +19,26 @@ public class ResourceApi {
     }
 
     static <R extends Resource> void register(@NotNull ResourceType<R, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull R resource) {
-        final ResourceContainer<R, ?> resourceContainer = (ResourceContainer<R, ?>) resourceTypes.computeIfAbsent(resourceType, resourceType1 -> new ResourceContainer<>(resourceType1));
+        final ResourceContainer<R, ?> resourceContainer = (ResourceContainer<R, ?>) resourceTypes.computeIfAbsent(resourceType, ResourceContainer::new);
         resourceContainer.register(namespaceID, resource);
         resources.add(resource);
     }
 
-    public static @NotNull GeneratedResourcePack generateResourcePack() {
+    public static @NotNull GeneratedResourcePack generateResourcePack(String packDescription) {
         GeneratedResourcePack resourcePack = new GeneratedResourcePack();
 
-        Map<ResourceType<?, ?>, Generator> generatorMap = new HashMap<>();
+        resourcePack.include("pack.mcmeta", "{\"pack\":{\"pack_format\":8,\"description\":\"" + packDescription + "\"}}");
+
+        Map<ResourceType<?, ?>, Generator<?>> generatorMap = new HashMap<>();
 
         Queue<Resource> queue = new LinkedList<>(resources);
 
         while (queue.peek() != null) {
             Resource resource = queue.poll();
 
-            final Generator generator = generatorMap.computeIfAbsent(resource.getResourceType(), ResourceType::createGenerator);
+            final Generator<?> generator = generatorMap.computeIfAbsent(resource.getResourceType(), ResourceType::createGenerator);
 
-            final Set<Resource> newResources = generator.add(resource);
-            if (newResources != null) {
-                queue.addAll(newResources);
-            }
+            queue.addAll(generator.__dependencies(resource));
         }
         generatorMap.forEach((resourceType, generator) -> generator.generate(resourcePack));
 

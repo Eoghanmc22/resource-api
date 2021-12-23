@@ -7,17 +7,17 @@ import com.mcecraft.resources.Utils;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 
 	private String destPath;
 
-	private File file;
+	private Path file;
 	private String text;
 
 	protected IncludedResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<IncludedResource, ?> resourceType) {
-		super(namespaceID, resourceType);
+		super(resourceType, namespaceID);
 	}
 
 	@Override
@@ -26,23 +26,14 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 			throw new NullPointerException("Incomplete builder!");
 		}
 		if (text != null) {
-			return new IncludedResource(getResourceType(), destPath, text);
+			return new IncludedResource(getResourceType(), getNamespaceID(), destPath, text);
 		} else {
-			return new IncludedResource(getResourceType(), destPath, file);
+			return new IncludedResource(getResourceType(), getNamespaceID(), destPath, file);
 		}
 	}
 
-	public @NotNull IncludedResourceBuilder texture(@NotNull Texture texture, @NotNull String location) {
-		final int idx = location.lastIndexOf(File.separator);
-		return file(texture.getPath() + location.substring(idx), location);
-	}
-
-	public @NotNull IncludedResourceBuilder file(@NotNull String destinationPath, @NotNull String currentPath) {
-		return file(destinationPath, new File(currentPath));
-	}
-
-	public @NotNull IncludedResourceBuilder file(@NotNull String destinationPath, @NotNull File currentPath) {
-		if (destPath != null || file != null) {
+	public @NotNull IncludedResourceBuilder file(@NotNull String destinationPath, @NotNull Path currentPath) {
+		if (destPath != null) {
 			throw new RuntimeException("Don't reuse builders!");
 		}
 
@@ -57,6 +48,10 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 	}
 
 	public @NotNull IncludedResourceBuilder text(@NotNull String destinationPath, @NotNull String text) {
+		if (destPath != null) {
+			throw new RuntimeException("Don't reuse builders!");
+		}
+
 		this.destPath = destinationPath;
 		this.text = text;
 

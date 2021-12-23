@@ -1,21 +1,18 @@
 package com.mcecraft.resources;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.mcecraft.resources.traits.StoreWithGson;
+import com.mcecraft.resources.gson.StoreWithGson;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -25,7 +22,7 @@ public class GeneratedResourcePack {
 
     private final Set<String> usedPaths = ConcurrentHashMap.newKeySet();
     private final Map<String, byte[]> resourcePackGeneratedFiles = new ConcurrentHashMap<>();
-    private final Map<String, File> resourcePackIncludedFiles = new ConcurrentHashMap<>();
+    private final Map<String, Path> resourcePackIncludedFiles = new ConcurrentHashMap<>();
     private volatile byte @Nullable [] bytes = null;
     private volatile @Nullable String hash = null;
 
@@ -64,13 +61,9 @@ public class GeneratedResourcePack {
     }
 
 
-    public void includeFile(@NotNull String path, @NotNull File file) {
+    public void includeFile(@NotNull String path, @NotNull Path file) {
         addPath(path);
         resourcePackIncludedFiles.put(path, file);
-    }
-
-    public void includeFile(@NotNull String path, @NotNull String file) {
-        includeFile(path, new File(file));
     }
 
 
@@ -84,16 +77,26 @@ public class GeneratedResourcePack {
                 String path = stringStringEntry.getKey();
                 byte[] contents = stringStringEntry.getValue();
 
-                zipOutputStream.putNextEntry(new ZipEntry(path));
+                ZipEntry zipEntry = new ZipEntry(path);
+
+                //remove meta data
+                zipEntry.setTime(-1);
+
+                zipOutputStream.putNextEntry(zipEntry);
                 zipOutputStream.write(contents);
             }
 
-            for (Map.Entry<String, File> stringFileEntry : resourcePackIncludedFiles.entrySet()) {
+            for (Map.Entry<String, Path> stringFileEntry : resourcePackIncludedFiles.entrySet()) {
                 String path = stringFileEntry.getKey();
-                File file = stringFileEntry.getValue();
+                Path file = stringFileEntry.getValue();
 
-                try (final FileInputStream inputStream = new FileInputStream(file)) {
-                    zipOutputStream.putNextEntry(new ZipEntry(path));
+                try (final InputStream inputStream = Files.newInputStream(file)) {
+                    ZipEntry zipEntry = new ZipEntry(path);
+
+                    //remove meta data
+                    zipEntry.setTime(-1);
+
+                    zipOutputStream.putNextEntry(zipEntry);
                     zipOutputStream.write(inputStream.readAllBytes());
                 }
             }
@@ -112,11 +115,7 @@ public class GeneratedResourcePack {
 
     public synchronized byte @NotNull [] getBytes() {
         final byte[] bytes = this.bytes;
-        if (bytes == null) {
-            return generate();
-        } else {
-            return bytes;
-        }
+        return Objects.requireNonNullElseGet(bytes, this::generate);
     }
 
     private @NotNull String genHash() {
@@ -127,11 +126,7 @@ public class GeneratedResourcePack {
 
     public synchronized @NotNull String getHash() {
         String hash = this.hash;
-        if (hash == null) {
-            return genHash();
-        } else {
-            return hash;
-        }
+        return Objects.requireNonNullElseGet(hash, this::genHash);
     }
 
     public void reset() {

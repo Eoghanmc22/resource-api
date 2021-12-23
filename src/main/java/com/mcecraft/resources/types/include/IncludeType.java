@@ -6,8 +6,9 @@ import com.mcecraft.resources.Resource;
 import com.mcecraft.resources.ResourceType;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,8 +16,7 @@ public class IncludeType implements ResourceType<IncludedResource, IncludedResou
 
 	public static final IncludeType INSTANCE = new IncludeType();
 
-	private IncludeType() {
-	}
+	private IncludeType() {}
 
 	@Override
 	public @NotNull IncludedResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
@@ -24,22 +24,22 @@ public class IncludeType implements ResourceType<IncludedResource, IncludedResou
 	}
 
 	@Override
-	public @NotNull Generator createGenerator() {
-		return new Generator() {
+	public @NotNull Generator<IncludedResource> createGenerator() {
+		return new Generator<>() {
 
-			Set<IncludedResource> resources = new HashSet<>();
+			private final Set<IncludedResource> resources = new HashSet<>();
 
 			@Override
-			public @Nullable Set<Resource> add(@NotNull Object resource) {
-				resources.add((IncludedResource) resource);
-				return null;
+			public @NotNull Collection<? extends Resource> dependencies(@NotNull IncludedResource resource) {
+				resources.add(resource);
+				return Collections.emptyList();
 			}
 
 			@Override
 			public void generate(@NotNull GeneratedResourcePack rp) {
 				for (IncludedResource resource : resources) {
-					if (resource.getFile() != null) {
-						rp.includeFile(resource.getDestPath(), resource.getFile());
+					if (resource.getPath() != null) {
+						rp.includeFile(resource.getDestPath(), resource.getPath());
 					} else if (resource.getText() != null) {
 						rp.include(resource.getDestPath(), resource.getText());
 					}

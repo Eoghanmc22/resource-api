@@ -1,11 +1,12 @@
 package com.mcecraft.resources;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
+import java.util.Collection;
 
-public interface Generator {
-	@Nullable Set<Resource> add(@NotNull Object resource);
+public interface Generator<R> {
+	default @NotNull Collection<? extends Resource> __dependencies(@NotNull Object resource) { return dependencies((R) resource); }
+
+	@NotNull Collection<? extends Resource> dependencies(@NotNull R resource);
 	void generate(@NotNull GeneratedResourcePack rp);
 }

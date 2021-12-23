@@ -12,7 +12,7 @@ class GeneratedResourcePackTest {
 		GeneratedResourcePack pack = new GeneratedResourcePack();
 		pack.include("pack/t.txt", "hello");
 		final byte[] bytes = pack.getBytes();
-		try (final FileOutputStream fileOutputStream = new FileOutputStream("tests/generatedResourcePackTest.zip");) {
+		try (final FileOutputStream fileOutputStream = new FileOutputStream("tests/generatedResourcePackTest.zip")) {
 			fileOutputStream.write(bytes);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

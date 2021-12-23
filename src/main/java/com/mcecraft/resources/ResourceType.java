@@ -7,5 +7,5 @@ public interface ResourceType<R extends Resource, B extends ResourceBuilder<R>> 
 
     @NotNull B makeBuilder(@NotNull NamespaceID namespaceID);
 
-    @NotNull Generator createGenerator();
+    @NotNull Generator<R> createGenerator();
 }

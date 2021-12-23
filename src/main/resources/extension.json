@@ -1,6 +1,5 @@
 {
   "entrypoint": "com.mcecraft.extension.ResourceExtension",
   "name": "Resource Api",
-  "mixinConfig": "mixins.ResourceApi.json",
   "version": "1.0"
 }
