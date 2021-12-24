@@ -5,6 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mcecraft.resources.*;
 import com.mcecraft.resources.types.include.IncludeType;
+import com.mcecraft.resources.utils.Json;
+import com.mcecraft.resources.utils.Loc;
+import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -37,10 +40,7 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 				NamespaceID id = resource.getNamespaceID();
 				includes.add(
 						ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)
-								.json(
-										Utils.resourcePath(id, Utils.MODELS),
-										resource.getModelProvider().get()
-								)
+								.data(Loc.of(id, Loc.MODELS), resource.getModel())
 								.build(false)
 				);
 
@@ -48,7 +48,7 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 			}
 
 			@Override
-			public void generate(@NotNull GeneratedResourcePack rp) {
+			public void generate(@NotNull ResourcePack rp) {
 				for (Map.Entry<Material, Set<ItemResource>> entry : resources.entrySet()) {
 					Material material = entry.getKey();
 					Set<ItemResource> resources = entry.getValue();
@@ -74,7 +74,7 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 					}
 					json.add("overrides", overrides);
 
-					rp.include(Utils.resourcePath(namespace, Utils.MODELS), json);
+					rp.include(Loc.of(namespace, Loc.MODELS), Json.of(json));
 				}
 			}
 		};

@@ -1,16 +1,12 @@
 package com.mcecraft.resources.types.include;
 
-import com.mcecraft.resources.GeneratedResourcePack;
-import com.mcecraft.resources.Generator;
-import com.mcecraft.resources.Resource;
-import com.mcecraft.resources.ResourceType;
+import com.mcecraft.resources.*;
+import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Loc;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class IncludeType implements ResourceType<IncludedResource, IncludedResourceBuilder> {
 
@@ -36,12 +32,13 @@ public class IncludeType implements ResourceType<IncludedResource, IncludedResou
 			}
 
 			@Override
-			public void generate(@NotNull GeneratedResourcePack rp) {
+			public void generate(@NotNull ResourcePack rp) {
 				for (IncludedResource resource : resources) {
-					if (resource.getPath() != null) {
-						rp.includeFile(resource.getDestPath(), resource.getPath());
-					} else if (resource.getText() != null) {
-						rp.include(resource.getDestPath(), resource.getText());
+					for (Map.Entry<Loc, Data> entry : resource.getResources().entrySet()) {
+						Loc loc = entry.getKey();
+						Data data = entry.getValue();
+
+						rp.include(loc, data);
 					}
 				}
 			}

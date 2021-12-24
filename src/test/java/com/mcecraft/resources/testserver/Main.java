@@ -1,6 +1,6 @@
 package com.mcecraft.resources.testserver;
 
-import com.mcecraft.resources.GeneratedResourcePack;
+import com.mcecraft.resources.ResourcePack;
 import com.mcecraft.resources.ResourceApi;
 import com.mcecraft.resources.testserver.blocks.Blocks;
 import com.mcecraft.resources.testserver.items.Items;
@@ -10,7 +10,6 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.Instance;
-import net.minestom.server.resourcepack.ResourcePack;
 import net.minestom.server.utils.NamespaceID;
 
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class Main {
             System.out.println("Block " + block + " loaded");
         }
 
-        GeneratedResourcePack resourcePack = ResourceApi.generateResourcePack("A demo resource pack");
+        ResourcePack resourcePack = ResourceApi.generateResourcePack("A demo resource pack");
 
         try {
             PackServer.run(resourcePack);
@@ -45,7 +44,7 @@ public class Main {
         MinecraftServer.getGlobalEventHandler().addListener(PlayerLoginEvent.class, (event) -> event.setSpawningInstance(instance));
 
         MinecraftServer.getGlobalEventHandler().addListener(PlayerSpawnEvent.class, (event) -> {
-            event.getPlayer().setResourcePack(ResourcePack.forced("http://localhost:8081/pack.zip", resourcePack.getHash()));
+            event.getPlayer().setResourcePack(net.minestom.server.resourcepack.ResourcePack.forced("http://localhost:8081/pack.zip", resourcePack.getHash()));
             event.getPlayer().getInventory().addItemStack(Items.TEST.create());
             event.getPlayer().getInventory().addItemStack(((SpawnerBlockResource)Blocks.TEST.getBlockResource()).getItem().createItemStack());
             event.getPlayer().teleport(new Pos(0, 45, 0));

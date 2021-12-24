@@ -2,10 +2,12 @@ package com.mcecraft.resources.types.block.spawner;
 
 import com.google.gson.JsonElement;
 import com.mcecraft.resources.*;
+import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Loc;
+import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -15,7 +17,7 @@ public class SpawnerBlockType implements ResourceType<SpawnerBlockResource, Spaw
 
     private SpawnerBlockType() {}
 
-    static final JsonElement DISPLAY_SETTINGS = Utils.json(Utils.resourceReader("/armorstand_block.json"));
+    static final JsonElement DISPLAY_SETTINGS = Utils.fromJsonReader(Utils.resourceReader("/armorstand_block.json"));
 
     @Override
     public @NotNull SpawnerBlockResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
@@ -31,13 +33,9 @@ public class SpawnerBlockType implements ResourceType<SpawnerBlockResource, Spaw
             }
 
             @Override
-            public void generate(@NotNull GeneratedResourcePack rp) {
-                try {
-                    rp.include(Utils.resourcePath(NamespaceID.from("resource_api", "clear"), Utils.TEXTURES), Utils.resourceInputStream("/clear.png").readAllBytes());
-                    rp.include(Utils.resourcePath(NamespaceID.from("block/spawner"), Utils.MODELS), Utils.resourceInputStream("/hide_spawner.json").readAllBytes());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            public void generate(@NotNull ResourcePack rp) {
+                rp.include(Loc.of(NamespaceID.from("resource_api", "clear"), Loc.TEXTURES), Data.ofResource("/clear.png"));
+                rp.include(Loc.of(NamespaceID.from("block/spawner"), Loc.MODELS), Data.ofResource("/hide_spawner.json"));
             }
         };
     }

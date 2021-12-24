@@ -4,6 +4,8 @@ import com.mcecraft.resources.*;
 import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.types.include.IncludedResource;
 import com.mcecraft.resources.types.include.IncludedResourceBuilder;
+import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Utils;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
 import net.minestom.server.utils.NamespaceID;
@@ -16,7 +18,7 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
 
     private BlockReplacement blockReplacement;
     private final List<IncludedResource> includes = new ArrayList<>();
-    private final Set<Pair<JsonProvider, BlockModelMeta>> models = new HashSet<>();
+    private final Set<Pair<Data, BlockModelMeta>> models = new HashSet<>();
 
     private boolean persist = true;
 
@@ -42,13 +44,13 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
         return this;
     }
 
-    public RealBlockResourceBuilder model(@NotNull JsonProvider modelProvider) {
-        models.add(new ObjectObjectImmutablePair<>(modelProvider, BlockModelMeta.from(Utils.prefixPath(getNamespaceID(), "block/"))));
+    public RealBlockResourceBuilder model(@NotNull Data model) {
+        models.add(new ObjectObjectImmutablePair<>(model, BlockModelMeta.from(Utils.prefixPath(getNamespaceID(), "block/"))));
         return this;
     }
 
-    public RealBlockResourceBuilder model(@NotNull JsonProvider modelProvider, BlockModelMeta meta) {
-        models.add(new ObjectObjectImmutablePair<>(modelProvider, meta));
+    public RealBlockResourceBuilder model(@NotNull Data model, BlockModelMeta meta) {
+        models.add(new ObjectObjectImmutablePair<>(model, meta));
         return this;
     }
 

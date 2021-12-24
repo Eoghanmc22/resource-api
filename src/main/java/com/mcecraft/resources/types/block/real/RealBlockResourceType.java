@@ -4,6 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mcecraft.resources.*;
 import com.mcecraft.resources.types.include.IncludeType;
+import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Json;
+import com.mcecraft.resources.utils.Loc;
+import com.mcecraft.resources.utils.Utils;
 import it.unimi.dsi.fastutil.Pair;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.NamespaceID;
@@ -32,22 +36,19 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
             public @NotNull Collection<? extends Resource> dependencies(@NotNull RealBlockResource resource) {
                 resource.setStateId(resource.getBlockReplacement().getNextBlock());
 
-                Block block = Block.fromBlockId(resource.getBlockReplacement().getBlockType().id());
+                Block blockType = Block.fromBlockId(resource.getBlockReplacement().getBlockType().id());
 
-                resources.computeIfAbsent(block, (key) -> new HashSet<>()).add(resource);
+                resources.computeIfAbsent(blockType, (key) -> new HashSet<>()).add(resource);
 
                 Set<Resource> includes = new HashSet<>(resource.getIncludes());
 
-                for (Pair<JsonProvider, BlockModelMeta> model : resource.getModels()) {
-                    JsonProvider json = model.left();
+                for (Pair<Data, BlockModelMeta> model : resource.getModels()) {
+                    Data json = model.left();
                     BlockModelMeta meta = model.right();
 
                     includes.add(
                             ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)
-                                    .json(
-                                            Utils.resourcePath(meta.model(), Utils.MODELS),
-                                            json.get()
-                                    )
+                                    .data(Loc.of(meta.model(), Loc.MODELS), json)
                                     .build(false)
                     );
                 }
@@ -56,7 +57,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
             }
 
             @Override
-            public void generate(@NotNull GeneratedResourcePack rp) {
+            public void generate(@NotNull ResourcePack rp) {
                 for (Map.Entry<Block, Set<RealBlockResource>> typeEntry : resources.entrySet()) {
                     Block blockType = typeEntry.getKey();
                     Set<RealBlockResource> resourceSet = typeEntry.getValue();
@@ -66,7 +67,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
                     for (RealBlockResource resource : resourceSet) {
                         Set<BlockModelMeta> meta = new HashSet<>();
 
-                        for (Pair<JsonProvider, BlockModelMeta> model : resource.getModels()) {
+                        for (Pair<Data, BlockModelMeta> model : resource.getModels()) {
                             meta.add(model.right());
                         }
 
@@ -86,12 +87,12 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
 
                         if (metaSet.size() == 1) {
                             BlockModelMeta meta = metaSet.iterator().next();
-                            variants.add(state, Utils.json(meta));
+                            variants.add(state, Utils.toJsonTree(meta));
                         } else {
                             JsonArray array = new JsonArray();
 
                             for (BlockModelMeta meta : metaSet) {
-                                array.add(Utils.json(meta));
+                                array.add(Utils.toJsonTree(meta));
                             }
 
                             variants.add(state, array);
@@ -99,7 +100,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
                     }
                     blockStates.add("variants", variants);
 
-                    rp.include(Utils.resourcePath(blockType.namespace(), Utils.BLOCK_STATES), Utils.GSON.toJson(blockStates));
+                    rp.include(Loc.of(blockType.namespace(), Loc.BLOCK_STATES), Json.of(blockStates));
                 }
             }
 

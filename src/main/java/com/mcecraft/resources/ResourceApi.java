@@ -1,5 +1,7 @@
 package com.mcecraft.resources;
 
+import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Loc;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,10 +26,10 @@ public class ResourceApi {
         resources.add(resource);
     }
 
-    public static @NotNull GeneratedResourcePack generateResourcePack(String packDescription) {
-        GeneratedResourcePack resourcePack = new GeneratedResourcePack();
+    public static @NotNull ResourcePack generateResourcePack(String packDescription) {
+        ResourcePack resourcePack = new ResourcePack();
 
-        resourcePack.include("pack.mcmeta", "{\"pack\":{\"pack_format\":8,\"description\":\"" + packDescription + "\"}}");
+        resourcePack.include(Loc.any("pack.mcmeta"), Data.of("{\"pack\":{\"pack_format\":8,\"description\":\"" + packDescription + "\"}}"));
 
         Map<ResourceType<?, ?>, Generator<?>> generatorMap = new HashMap<>();
 
@@ -41,6 +43,8 @@ public class ResourceApi {
             queue.addAll(generator.__dependencies(resource));
         }
         generatorMap.forEach((resourceType, generator) -> generator.generate(resourcePack));
+
+        resourcePack.generate();
 
         return resourcePack;
     }

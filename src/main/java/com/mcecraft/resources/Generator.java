@@ -8,5 +8,5 @@ public interface Generator<R> {
 	default @NotNull Collection<? extends Resource> __dependencies(@NotNull Object resource) { return dependencies((R) resource); }
 
 	@NotNull Collection<? extends Resource> dependencies(@NotNull R resource);
-	void generate(@NotNull GeneratedResourcePack rp);
+	void generate(@NotNull ResourcePack rp);
 }

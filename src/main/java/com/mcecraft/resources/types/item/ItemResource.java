@@ -1,10 +1,9 @@
 package com.mcecraft.resources.types.item;
 
-import com.mcecraft.resources.JsonProvider;
+import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.Resource;
 import com.mcecraft.resources.ResourceType;
 import com.mcecraft.resources.types.include.IncludedResource;
-import com.mcecraft.resources.types.include.IncludedResourceBuilder;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
@@ -15,18 +14,18 @@ import java.util.List;
 public class ItemResource extends Resource {
 	private final @NotNull Material material;
 	private final @NotNull List<@NotNull IncludedResource> includes;
-	private final @NotNull JsonProvider modelProvider;
+	private final @NotNull Data model;
 
 	private final boolean persist;
 
 	private int customModelId = 0;
 
-	public ItemResource(@NotNull ResourceType<? extends Resource, ?> type, @NotNull NamespaceID namespaceID, @NotNull Material material, @NotNull JsonProvider modelProvider, @NotNull List<@NotNull IncludedResource> includes, boolean persist) {
+	public ItemResource(@NotNull ResourceType<? extends Resource, ?> type, @NotNull NamespaceID namespaceID, @NotNull Material material, @NotNull Data model, @NotNull List<@NotNull IncludedResource> includes, boolean persist) {
 		super(type, namespaceID);
 
 		this.material = material;
 		this.includes = includes;
-		this.modelProvider = modelProvider;
+		this.model = model;
 
 		this.persist = persist;
 	}
@@ -35,8 +34,8 @@ public class ItemResource extends Resource {
 		return material;
 	}
 
-	public @NotNull JsonProvider getModelProvider() {
-		return modelProvider;
+	public @NotNull Data getModel() {
+		return model;
 	}
 
 	public @NotNull List<@NotNull IncludedResource> getIncludes() {

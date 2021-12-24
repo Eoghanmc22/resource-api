@@ -1,20 +1,19 @@
 package com.mcecraft.resources.types.include;
 
-import com.google.gson.JsonElement;
+import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.ResourceBuilder;
 import com.mcecraft.resources.ResourceType;
-import com.mcecraft.resources.Utils;
+import com.mcecraft.resources.utils.Loc;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 
-	private String destPath;
-
-	private Path file;
-	private String text;
+	private final Map<Loc, Data> resources = new HashMap<>();
 
 	protected IncludedResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<IncludedResource, ?> resourceType) {
 		super(resourceType, namespaceID);
@@ -22,38 +21,27 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 
 	@Override
 	protected @NotNull IncludedResource buildImpl() {
-		if (destPath == null || (file == null && text == null)) {
+		if (resources.isEmpty()) {
 			throw new NullPointerException("Incomplete builder!");
 		}
-		if (text != null) {
-			return new IncludedResource(getResourceType(), getNamespaceID(), destPath, text);
-		} else {
-			return new IncludedResource(getResourceType(), getNamespaceID(), destPath, file);
-		}
+
+		return new IncludedResource(getResourceType(), getNamespaceID(), resources);
 	}
 
-	public @NotNull IncludedResourceBuilder file(@NotNull String destinationPath, @NotNull Path currentPath) {
-		if (destPath != null) {
-			throw new RuntimeException("Don't reuse builders!");
-		}
-
-		this.destPath = destinationPath;
-		this.file = currentPath;
+	public @NotNull IncludedResourceBuilder file(@NotNull Loc loc, @NotNull Path file) {
+		resources.put(loc, Data.of(file));
 
 		return this;
 	}
 
-	public @NotNull IncludedResourceBuilder json(@NotNull String destinationPath, @NotNull JsonElement json) {
-		return text(destinationPath, Utils.GSON.toJson(json));
+	public @NotNull IncludedResourceBuilder data(@NotNull Loc loc, @NotNull Data data) {
+		resources.put(loc, data);
+
+		return this;
 	}
 
-	public @NotNull IncludedResourceBuilder text(@NotNull String destinationPath, @NotNull String text) {
-		if (destPath != null) {
-			throw new RuntimeException("Don't reuse builders!");
-		}
-
-		this.destPath = destinationPath;
-		this.text = text;
+	public @NotNull IncludedResourceBuilder text(@NotNull Loc loc, @NotNull String text) {
+		resources.put(loc, Data.of(text));
 
 		return this;
 	}

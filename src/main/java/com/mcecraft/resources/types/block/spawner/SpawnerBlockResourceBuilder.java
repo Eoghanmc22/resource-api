@@ -4,6 +4,9 @@ import com.mcecraft.resources.*;
 import com.mcecraft.resources.types.include.IncludedResourceBuilder;
 import com.mcecraft.resources.types.item.ItemResourceBuilder;
 import com.mcecraft.resources.types.item.ItemType;
+import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Json;
+import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +26,9 @@ public class SpawnerBlockResourceBuilder extends ResourceBuilder<SpawnerBlockRes
         return new SpawnerBlockResource(getResourceType(), getNamespaceID(), item.build(false));
     }
 
-    public SpawnerBlockResourceBuilder model(@NotNull JsonProvider model) {
+    public SpawnerBlockResourceBuilder model(@NotNull Data model) {
         // inject the correct display settings
-        item.model(() -> Utils.mergeJson(model.get(), SpawnerBlockType.DISPLAY_SETTINGS));
+        item.model(Json.lazy(() -> Utils.mergeJson(Json.of(model).json(), SpawnerBlockType.DISPLAY_SETTINGS)));
         return this;
     }
 

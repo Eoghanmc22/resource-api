@@ -1,4 +1,4 @@
-package com.mcecraft.resources;
+package com.mcecraft.resources.utils;
 
 import com.google.gson.*;
 import com.mcecraft.resources.gson.NamespacedIDTypeAdapter;
@@ -12,10 +12,8 @@ import java.io.Reader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Utils {
     public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().registerTypeAdapter(NamespaceID.class, new NamespacedIDTypeAdapter()).create();
@@ -44,20 +42,6 @@ public class Utils {
         }
     }
 
-    public static final String BLOCK_STATES = "blockstates";
-    public static final String MODELS = "models";
-    public static final String TEXTURES = "textures";
-
-    public static @NotNull String resourcePath(@NotNull NamespaceID namespace, @NotNull String objectType) {
-        String extension = ".json";
-
-        if (objectType.equals(TEXTURES)) {
-            extension = ".png";
-        }
-
-        return "assets/" + namespace.getDomain() + "/" + objectType + "/" + namespace.getPath() + extension;
-    }
-
     public static @NotNull NamespaceID prefixDomain(@NotNull NamespaceID namespace, @NotNull String prefix) {
         if (namespace.getDomain().startsWith(prefix)) {
             return namespace;
@@ -74,11 +58,11 @@ public class Utils {
         return NamespaceID.from(namespace.getDomain(), prefix + namespace.getPath());
     }
 
-    public static @NotNull <T> JsonElement json(@NotNull T obj) {
+    public static @NotNull <T> JsonElement toJsonTree(@NotNull T obj) {
         return GSON.toJsonTree(obj);
     }
 
-    public static @NotNull JsonElement json(@NotNull Reader reader) {
+    public static @NotNull JsonElement fromJsonReader(@NotNull Reader reader) {
         return GSON.fromJson(reader, JsonElement.class);
     }
 

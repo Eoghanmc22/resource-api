@@ -1,6 +1,6 @@
 package com.mcecraft.resources.types.block.real;
 
-import com.mcecraft.resources.JsonProvider;
+import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.Resource;
 import com.mcecraft.resources.ResourceType;
 import com.mcecraft.resources.types.block.BlockResource;
@@ -17,13 +17,13 @@ import java.util.Set;
 public class RealBlockResource extends Resource implements BlockResource {
     private final @NotNull BlockReplacement blockReplacement;
     private final @NotNull List<IncludedResource> includes;
-    private final @NotNull Set<Pair<JsonProvider, BlockModelMeta>> models;
+    private final @NotNull Set<Pair<Data, BlockModelMeta>> models;
 
     private final boolean persist;
 
     private short stateId;
 
-    public RealBlockResource(@NotNull ResourceType<? extends Resource, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull BlockReplacement blockReplacement, @NotNull List<@NotNull IncludedResource> includes, @NotNull Set<Pair<JsonProvider, BlockModelMeta>> models, boolean persist) {
+    public RealBlockResource(@NotNull ResourceType<? extends Resource, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull BlockReplacement blockReplacement, @NotNull List<@NotNull IncludedResource> includes, @NotNull Set<Pair<Data, BlockModelMeta>> models, boolean persist) {
         super(resourceType, namespaceID);
 
         this.blockReplacement = blockReplacement;
@@ -41,7 +41,7 @@ public class RealBlockResource extends Resource implements BlockResource {
         return includes;
     }
 
-    public @NotNull Set<Pair<JsonProvider, BlockModelMeta>> getModels() {
+    public @NotNull Set<Pair<Data, BlockModelMeta>> getModels() {
         return models;
     }
 

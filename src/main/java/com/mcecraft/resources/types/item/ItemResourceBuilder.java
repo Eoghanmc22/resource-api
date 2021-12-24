@@ -4,6 +4,8 @@ import com.mcecraft.resources.*;
 import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.types.include.IncludedResource;
 import com.mcecraft.resources.types.include.IncludedResourceBuilder;
+import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +18,7 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 
 	private Material material;
 	private final List<IncludedResource> includes = new ArrayList<>();
-	private JsonProvider modelProvider;
+	private Data model;
 
 	private boolean persist = true;
 
@@ -26,11 +28,11 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 
 	@Override
 	protected @NotNull ItemResource buildImpl() {
-		if (material == null || modelProvider == null) {
+		if (material == null || model == null) {
 			throw new NullPointerException("Incomplete builder!");
 		}
 
-		return new ItemResource(getResourceType(), getNamespaceID(), material, modelProvider, includes, persist);
+		return new ItemResource(getResourceType(), getNamespaceID(), material, model, includes, persist);
 	}
 
 	public @NotNull ItemResourceBuilder material(@NotNull Material material) {
@@ -38,8 +40,8 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 		return this;
 	}
 
-	public @NotNull ItemResourceBuilder model(@NotNull JsonProvider model) {
-		this.modelProvider = model;
+	public @NotNull ItemResourceBuilder model(@NotNull Data model) {
+		this.model = model;
 		return this;
 	}
 
