@@ -12,8 +12,8 @@ public interface Data {
 
     static @NotNull Data of(@NotNull Path path) {
         return lazy(() -> {
-            try (InputStream is = Files.newInputStream(path)) {
-                return is.readAllBytes();
+            try {
+                return Files.readAllBytes(path);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

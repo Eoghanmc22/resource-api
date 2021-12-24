@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public interface Json extends Data {
     static @NotNull Json of(@NotNull Data data) {
@@ -25,6 +27,28 @@ public interface Json extends Data {
             @Override
             public byte @NotNull [] bytes() {
                 return data.bytes();
+            }
+        });
+    }
+
+    static @NotNull Json of(@NotNull Path path) {
+        return lazy(new Json() {
+            Once<String> data = new Once<>(() -> {
+                try {
+                    return Files.readString(path);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            @Override
+            public @NotNull JsonElement json() {
+                return Json.of(data.get()).json();
+            }
+
+            @Override
+            public byte @NotNull [] bytes() {
+                return data.get().getBytes(StandardCharsets.UTF_8);
             }
         });
     }

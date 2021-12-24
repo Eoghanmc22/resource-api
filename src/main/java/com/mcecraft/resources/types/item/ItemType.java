@@ -1,9 +1,11 @@
 package com.mcecraft.resources.types.item;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mcecraft.resources.*;
+import com.mcecraft.resources.mojang.DefaultResourcePack;
 import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.utils.Json;
 import com.mcecraft.resources.utils.Loc;
@@ -56,9 +58,10 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 					int cmiCounter = 1;
 					NamespaceID namespace = Utils.prefixPath(material.namespace(), "item/");
 
-					JsonObject json = new JsonObject();
+					JsonObject custom = new JsonObject();
 
 					JsonArray overrides = new JsonArray();
+
 					for (ItemResource itemResource : resources) {
 						itemResource.setCustomModelId(cmiCounter);
 
@@ -68,13 +71,17 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 						predicate.add("custom_model_data", new JsonPrimitive(cmiCounter++));
 						override.add("predicate", predicate);
 
-						override.add("model", new JsonPrimitive(itemResource.getNamespaceID().asString()));
+						override.add("model", Utils.toJsonTree(itemResource.getNamespaceID().asString()));
 
 						overrides.add(override);
 					}
-					json.add("overrides", overrides);
+					custom.add("overrides", overrides);
 
-					rp.include(Loc.of(namespace, Loc.MODELS), Json.of(json));
+					Loc resourceLocation = Loc.of(namespace, Loc.MODELS);
+
+					JsonElement vanilla = Json.of(DefaultResourcePack.get(resourceLocation)).json();
+
+					rp.include(resourceLocation, Json.of(Utils.mergeJson(vanilla, custom)));
 				}
 			}
 		};

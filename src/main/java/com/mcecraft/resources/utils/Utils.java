@@ -26,20 +26,24 @@ public class Utils {
 
             byte[] messageDigest = md.digest(resourcePack);
 
-            BigInteger no = new BigInteger(1, messageDigest);
-
-            StringBuilder hash = new StringBuilder(no.toString(16));
-
-            while (hash.length() < 40) {
-                hash.insert(0, "0");
-            }
-
-            return hash.toString();
+            return hashDigestToString(messageDigest);
         }
 
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static @NotNull String hashDigestToString(byte @NotNull [] messageDigest) {
+        BigInteger no = new BigInteger(1, messageDigest);
+
+        StringBuilder hash = new StringBuilder(no.toString(16));
+
+        while (hash.length() < 40) {
+            hash.insert(0, "0");
+        }
+
+        return hash.toString();
     }
 
     public static @NotNull NamespaceID prefixDomain(@NotNull NamespaceID namespace, @NotNull String prefix) {
