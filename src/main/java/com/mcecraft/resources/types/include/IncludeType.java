@@ -32,7 +32,7 @@ public class IncludeType implements ResourceType<IncludedResource, IncludedResou
 			}
 
 			@Override
-			public void generate(@NotNull ResourcePack rp) {
+			public void generate(@NotNull DynamicResourcePack rp) {
 				for (IncludedResource resource : resources) {
 					for (Map.Entry<Loc, Data> entry : resource.getResources().entrySet()) {
 						Loc loc = entry.getKey();

@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-class ResourcePackTest {
+class DynamicResourcePackTest {
 
 	@Test
 	void test() {
-		ResourcePack pack = new ResourcePack();
+		DynamicResourcePack pack = new DynamicResourcePack();
 		pack.include(Loc.any("pack/t.txt"), Data.of("hello"));
 		final byte[] bytes = pack.getBytes();
 		try (final FileOutputStream fileOutputStream = new FileOutputStream("tests/generatedResourcePackTest.zip")) {

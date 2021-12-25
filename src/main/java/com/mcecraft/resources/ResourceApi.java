@@ -26,8 +26,8 @@ public class ResourceApi {
         resources.add(resource);
     }
 
-    public static @NotNull ResourcePack generateResourcePack(String packDescription) {
-        ResourcePack resourcePack = new ResourcePack();
+    public static @NotNull DynamicResourcePack generateResourcePack(String packDescription) {
+        DynamicResourcePack resourcePack = new DynamicResourcePack();
 
         resourcePack.include(Loc.any("pack.mcmeta"), Data.of("{\"pack\":{\"pack_format\":8,\"description\":\"" + packDescription + "\"}}"));
 

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class ResourcePack {
+public class DynamicResourcePack {
     private final Map<Loc, Data> resourcePackIncludedFiles = new ConcurrentHashMap<>();
     private volatile byte [] bytes = null;
     private volatile String hash = null;

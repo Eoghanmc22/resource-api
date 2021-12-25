@@ -57,7 +57,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
             }
 
             @Override
-            public void generate(@NotNull ResourcePack rp) {
+            public void generate(@NotNull DynamicResourcePack rp) {
                 for (Map.Entry<Block, Set<RealBlockResource>> typeEntry : resources.entrySet()) {
                     Block blockType = typeEntry.getKey();
                     Set<RealBlockResource> resourceSet = typeEntry.getValue();

@@ -1,6 +1,6 @@
 package com.mcecraft.resources.testserver;
 
-import com.mcecraft.resources.ResourcePack;
+import com.mcecraft.resources.DynamicResourcePack;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -10,7 +10,7 @@ import java.net.InetSocketAddress;
 
 public class PackServer {
 
-    public static void run(ResourcePack rp) throws IOException {
+    public static void run(DynamicResourcePack rp) throws IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress("0.0.0.0", 8081), 0);
 
         byte[] resourcePack = rp.getBytes();

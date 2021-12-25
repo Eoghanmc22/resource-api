@@ -33,7 +33,7 @@ public class SpawnerBlockType implements ResourceType<SpawnerBlockResource, Spaw
             }
 
             @Override
-            public void generate(@NotNull ResourcePack rp) {
+            public void generate(@NotNull DynamicResourcePack rp) {
                 rp.include(Loc.of(NamespaceID.from("resource_api", "clear"), Loc.TEXTURES), Data.ofResource("/clear.png"));
                 rp.include(Loc.of(NamespaceID.from("block/spawner"), Loc.MODELS), Data.ofResource("/hide_spawner.json"));
             }

@@ -50,7 +50,7 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 			}
 
 			@Override
-			public void generate(@NotNull ResourcePack rp) {
+			public void generate(@NotNull DynamicResourcePack rp) {
 				for (Map.Entry<Material, Set<ItemResource>> entry : resources.entrySet()) {
 					Material material = entry.getKey();
 					Set<ItemResource> resources = entry.getValue();
