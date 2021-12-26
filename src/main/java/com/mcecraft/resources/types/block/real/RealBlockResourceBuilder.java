@@ -1,6 +1,7 @@
 package com.mcecraft.resources.types.block.real;
 
 import com.mcecraft.resources.*;
+import com.mcecraft.resources.types.block.real.replacement.BlockReplacement;
 import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.types.include.IncludedResource;
 import com.mcecraft.resources.types.include.IncludedResourceBuilder;

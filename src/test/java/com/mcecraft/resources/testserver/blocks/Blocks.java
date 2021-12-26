@@ -4,7 +4,7 @@ import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.ResourceApi;
 import com.mcecraft.resources.utils.Loc;
 import com.mcecraft.resources.types.block.BlockResource;
-import com.mcecraft.resources.types.block.real.BlockReplacement;
+import com.mcecraft.resources.types.block.real.replacement.BlockReplacement;
 import com.mcecraft.resources.types.block.real.RealBlockResourceType;
 import com.mcecraft.resources.types.block.spawner.SpawnerBlockType;
 import net.minestom.server.instance.block.Block;

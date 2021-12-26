@@ -34,9 +34,20 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
 
             @Override
             public @NotNull Collection<? extends Resource> dependencies(@NotNull RealBlockResource resource) {
-                resource.setStateId(resource.getBlockReplacement().getNextBlock());
+                short blockState = resource.getBlockReplacement().getNextBlock();
+                Block block = Block.fromStateId(blockState);
 
-                Block blockType = Block.fromBlockId(resource.getBlockReplacement().getBlockType().id());
+                if (block == null) {
+                    throw new RuntimeException("No block was found for state id " + blockState + " for " + resource.getNamespaceID());
+                }
+
+                Block blockType = Block.fromBlockId(block.id());
+
+                if (blockType == null) {
+                    throw new RuntimeException("No blockType was found for block " + block.namespace() + " for " + resource.getNamespaceID());
+                }
+
+                resource.setStateId(blockState);
 
                 resources.computeIfAbsent(blockType, (key) -> new HashSet<>()).add(resource);
 

@@ -1,5 +1,6 @@
 package com.mcecraft.resources.types.block.real;
 
+import com.mcecraft.resources.types.block.real.replacement.BlockReplacement;
 import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.Resource;
 import com.mcecraft.resources.ResourceType;
