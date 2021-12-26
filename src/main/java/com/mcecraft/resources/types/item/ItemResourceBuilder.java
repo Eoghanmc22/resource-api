@@ -22,7 +22,7 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 
 	private boolean persist = true;
 
-	protected ItemResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<ItemResource, ?> resourceType) {
+	protected ItemResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<ItemResource, ?, ?> resourceType) {
 		super(resourceType, namespaceID);
 	}
 

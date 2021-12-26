@@ -23,7 +23,7 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
 
     private boolean persist = true;
 
-    protected RealBlockResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<RealBlockResource, ?> resourceType) {
+    protected RealBlockResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<RealBlockResource, ?, ?> resourceType) {
         super(resourceType, namespaceID);
     }
 

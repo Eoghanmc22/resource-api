@@ -15,7 +15,7 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 
 	private final Map<Loc, Data> resources = new HashMap<>();
 
-	protected IncludedResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<IncludedResource, ?> resourceType) {
+	protected IncludedResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<IncludedResource, ?, ?> resourceType) {
 		super(resourceType, namespaceID);
 	}
 

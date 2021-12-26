@@ -5,10 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ResourceBuilder<R extends Resource> {
 
-    private final ResourceType<R, ?> resourceType;
+    private final ResourceType<R, ?, ?> resourceType;
     private final @NotNull NamespaceID namespaceID;
 
-    protected ResourceBuilder(@NotNull ResourceType<R, ?> resourceType, @NotNull NamespaceID namespaceID) {
+    protected ResourceBuilder(@NotNull ResourceType<R, ?, ?> resourceType, @NotNull NamespaceID namespaceID) {
         this.namespaceID = namespaceID;
         this.resourceType = resourceType;
     }
@@ -27,7 +27,7 @@ public abstract class ResourceBuilder<R extends Resource> {
 
     protected abstract @NotNull R buildImpl();
 
-    public ResourceType<R, ?> getResourceType() {
+    public ResourceType<R, ?, ?> getResourceType() {
         return resourceType;
     }
 

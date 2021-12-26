@@ -33,7 +33,7 @@ public interface Json extends Data {
 
     static @NotNull Json of(@NotNull Path path) {
         return lazy(new Json() {
-            Once<String> data = new Once<>(() -> {
+            final Once<String> data = new Once<>(() -> {
                 try {
                     return Files.readString(path);
                 } catch (IOException e) {

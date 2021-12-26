@@ -14,7 +14,7 @@ public class IncludedResource extends Resource {
 
 	private @NotNull final Map<Loc, Data> resources;
 
-	public IncludedResource(@NotNull ResourceType<? extends Resource, ?> type, @NotNull NamespaceID namespaceID, @NotNull Map<Loc, Data> resources) {
+	public IncludedResource(@NotNull ResourceType<? extends Resource, ?, ?> type, @NotNull NamespaceID namespaceID, @NotNull Map<Loc, Data> resources) {
 		super(type, namespaceID);
 
 		this.resources = Collections.unmodifiableMap(resources);

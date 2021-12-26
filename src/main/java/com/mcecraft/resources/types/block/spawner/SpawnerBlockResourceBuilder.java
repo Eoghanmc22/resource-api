@@ -17,7 +17,7 @@ public class SpawnerBlockResourceBuilder extends ResourceBuilder<SpawnerBlockRes
 
     private final @NotNull ItemResourceBuilder item = ResourceApi.create(ItemType.INSTANCE, getNamespaceID()).material(Material.PAPER);
 
-    protected SpawnerBlockResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<SpawnerBlockResource, ?> resourceType) {
+    protected SpawnerBlockResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<SpawnerBlockResource, ?, ?> resourceType) {
         super(resourceType, namespaceID);
     }
 

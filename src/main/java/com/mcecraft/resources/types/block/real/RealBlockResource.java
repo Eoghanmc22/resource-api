@@ -24,7 +24,7 @@ public class RealBlockResource extends Resource implements BlockResource {
 
     private short stateId;
 
-    public RealBlockResource(@NotNull ResourceType<? extends Resource, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull BlockReplacement blockReplacement, @NotNull List<@NotNull IncludedResource> includes, @NotNull Set<Pair<Data, BlockModelMeta>> models, boolean persist) {
+    public RealBlockResource(@NotNull ResourceType<? extends Resource, ?, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull BlockReplacement blockReplacement, @NotNull List<@NotNull IncludedResource> includes, @NotNull Set<Pair<Data, BlockModelMeta>> models, boolean persist) {
         super(resourceType, namespaceID);
 
         this.blockReplacement = blockReplacement;

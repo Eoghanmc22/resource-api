@@ -20,7 +20,7 @@ public class ItemResource extends Resource {
 
 	private int customModelId = 0;
 
-	public ItemResource(@NotNull ResourceType<? extends Resource, ?> type, @NotNull NamespaceID namespaceID, @NotNull Material material, @NotNull Data model, @NotNull List<@NotNull IncludedResource> includes, boolean persist) {
+	public ItemResource(@NotNull ResourceType<? extends Resource, ?, ?> type, @NotNull NamespaceID namespaceID, @NotNull Material material, @NotNull Data model, @NotNull List<@NotNull IncludedResource> includes, boolean persist) {
 		super(type, namespaceID);
 
 		this.material = material;

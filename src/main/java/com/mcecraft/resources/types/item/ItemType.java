@@ -6,21 +6,29 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mcecraft.resources.*;
 import com.mcecraft.resources.mojang.DefaultResourcePack;
+import com.mcecraft.resources.persistence.PersistenceProvider;
 import com.mcecraft.resources.types.include.IncludeType;
+import com.mcecraft.resources.types.item.persistence.ItemPersistenceStore;
 import com.mcecraft.resources.utils.Json;
 import com.mcecraft.resources.utils.Loc;
 import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder> {
+public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder, ItemPersistenceStore> {
 
 	public static final ItemType INSTANCE = new ItemType();
 
 	private ItemType() {}
+
+	@Override
+	public @Nullable NamespaceID getPersistenceId() {
+		return NamespaceID.from("resource_api:item");
+	}
 
 	@Override
 	public @NotNull ItemResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
@@ -28,13 +36,13 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 	}
 
 	@Override
-	public @NotNull Generator<ItemResource> createGenerator() {
+	public @NotNull Generator<ItemResource, ItemPersistenceStore> createGenerator() {
 		return new Generator<>() {
 
 			final Map<Material, Set<ItemResource>> resources = new HashMap<>();
 
 			@Override
-			public @NotNull Collection<? extends Resource> dependencies(@NotNull ItemResource resource) {
+			public @NotNull Collection<? extends Resource> dependencies(@NotNull ItemResource resource, @NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
 				resources.computeIfAbsent(resource.getMaterial(), (key) -> new HashSet<>()).add(resource);
 
 				Set<Resource> includes = new HashSet<>(resource.getIncludes());
@@ -50,7 +58,7 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder>
 			}
 
 			@Override
-			public void generate(@NotNull DynamicResourcePack rp) {
+			public void generate(@NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
 				for (Map.Entry<Material, Set<ItemResource>> entry : resources.entrySet()) {
 					Material material = entry.getKey();
 					Set<ItemResource> resources = entry.getValue();

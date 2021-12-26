@@ -1,7 +1,9 @@
 package com.mcecraft.resources.utils;
 
 import com.google.gson.*;
+import com.mcecraft.resources.persistence.PersistenceStore;
 import com.mcecraft.resources.gson.NamespacedIDTypeAdapter;
+import com.mcecraft.resources.gson.PersistenceStoreTypeAdapter;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +18,13 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Utils {
-    public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().registerTypeAdapter(NamespaceID.class, new NamespacedIDTypeAdapter()).create();
+
+    public static final Gson GSON = new GsonBuilder()
+            .disableHtmlEscaping()
+            .registerTypeAdapter(NamespaceID.class, new NamespacedIDTypeAdapter())
+            .registerTypeAdapter(PersistenceStore.class, new PersistenceStoreTypeAdapter())
+            .create();
+
     public static final NamespaceID INTERNAL = NamespaceID.from("resource_api:internal");
 
     //https://www.geeksforgeeks.org/sha-1-hash-in-java/

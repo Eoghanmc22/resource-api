@@ -3,6 +3,8 @@ package com.mcecraft.resources.types.block.real;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mcecraft.resources.*;
+import com.mcecraft.resources.persistence.PersistenceProvider;
+import com.mcecraft.resources.types.block.real.persistence.RealBlockPersistenceStore;
 import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.utils.Json;
@@ -12,14 +14,20 @@ import it.unimi.dsi.fastutil.Pair;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class RealBlockResourceType implements ResourceType<RealBlockResource, RealBlockResourceBuilder> {
+public class RealBlockResourceType implements ResourceType<RealBlockResource, RealBlockResourceBuilder, RealBlockPersistenceStore> {
 
     public static final RealBlockResourceType INSTANCE = new RealBlockResourceType();
 
     private RealBlockResourceType() {}
+
+    @Override
+    public @Nullable NamespaceID getPersistenceId() {
+        return NamespaceID.from("resource_api:real_block");
+    }
 
     @Override
     public @NotNull RealBlockResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
@@ -27,13 +35,13 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
     }
 
     @Override
-    public @NotNull Generator<RealBlockResource> createGenerator() {
+    public @NotNull Generator<RealBlockResource, RealBlockPersistenceStore> createGenerator() {
         return new Generator<>() {
 
             final Map<Block, Set<RealBlockResource>> resources = new HashMap<>();
 
             @Override
-            public @NotNull Collection<? extends Resource> dependencies(@NotNull RealBlockResource resource) {
+            public @NotNull Collection<? extends Resource> dependencies(@NotNull RealBlockResource resource, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
                 short blockState = resource.getBlockReplacement().getNextBlock();
                 Block block = Block.fromStateId(blockState);
 
@@ -68,7 +76,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
             }
 
             @Override
-            public void generate(@NotNull DynamicResourcePack rp) {
+            public void generate(@NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
                 for (Map.Entry<Block, Set<RealBlockResource>> typeEntry : resources.entrySet()) {
                     Block blockType = typeEntry.getKey();
                     Set<RealBlockResource> resourceSet = typeEntry.getValue();
