@@ -65,8 +65,8 @@ public class DefaultResourcePack {
                 for (JsonElement version1 : versions) {
                     JsonObject version = version1.getAsJsonObject();
 
-                    if (MinecraftServer.VERSION_NAME.equals(version.get("id").getAsJsonPrimitive().getAsString())) {
-                        clientInfoURL = new URL(version.get("url").getAsJsonPrimitive().getAsString());
+                    if (MinecraftServer.VERSION_NAME.equals(version.get("id").getAsString())) {
+                        clientInfoURL = new URL(version.get("url").getAsString());
 
                         logger.info("Found client info for {}", MinecraftServer.VERSION_NAME);
                     }
@@ -88,8 +88,8 @@ public class DefaultResourcePack {
                 }
 
                 JsonObject client = clientData.get("downloads").getAsJsonObject().get("client").getAsJsonObject();
-                String jarHash = client.get("sha1").getAsJsonPrimitive().getAsString();
-                URL jarURL = new URL(client.get("url").getAsJsonPrimitive().getAsString());
+                String jarHash = client.get("sha1").getAsString();
+                URL jarURL = new URL(client.get("url").getAsString());
 
                 Path gamePath = JAR_CACHE.resolve(MinecraftServer.VERSION_NAME + ".jar");
 
@@ -133,23 +133,23 @@ public class DefaultResourcePack {
                     }
                 }
 
-                JarFile jar = new JarFile(gamePath.toFile());
+                try (JarFile jar = new JarFile(gamePath.toFile())) {
+                    jar.stream()
+                            .filter(jarEntry -> jarEntry.getName().startsWith("assets/minecraft"))
+                            .forEach(jarEntry -> {
+                                try {
+                                    Path path = DEFAULT_PACK.resolve(jarEntry.getName());
 
-                jar.stream()
-                        .filter(jarEntry -> jarEntry.getName().startsWith("assets/minecraft"))
-                        .forEach(jarEntry -> {
-                            try {
-                                Path path = DEFAULT_PACK.resolve(jarEntry.getName());
-
-                                Files.createDirectories(path.getParent());
-                                try (OutputStream os = Files.newOutputStream(path); InputStream is = jar.getInputStream(jarEntry)) {
-                                    is.transferTo(os);
-                                    os.flush();
+                                    Files.createDirectories(path.getParent());
+                                    try (OutputStream os = Files.newOutputStream(path); InputStream is = jar.getInputStream(jarEntry)) {
+                                        is.transferTo(os);
+                                        os.flush();
+                                    }
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
                                 }
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
+                            });
+                }
 
                 available = true;
                 logger.info("Successfully got default resource pack");
