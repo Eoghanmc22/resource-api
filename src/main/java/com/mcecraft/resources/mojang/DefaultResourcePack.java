@@ -8,6 +8,7 @@ import com.mcecraft.resources.utils.Json;
 import com.mcecraft.resources.utils.Loc;
 import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.MinecraftServer;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +162,7 @@ public class DefaultResourcePack {
 
     private static final PathMatcher jsonMatcher = FileSystems.getDefault().getPathMatcher("glob:*.json");
 
-    public static Data get(Loc loc) {
+    public static @NotNull Data get(@NotNull Loc loc) {
         if (!isAvailable()) {
             throw new RuntimeException("The default resource pack is not available likely due to an error earlier in the console");
         }

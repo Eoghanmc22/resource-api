@@ -123,7 +123,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
                 }
             }
 
-            private String generateStateString(Map<String, String> propertiesMap) {
+            private @NotNull String generateStateString(@NotNull Map<String, String> propertiesMap) {
                 StringBuilder sb = new StringBuilder();
 
                 // Use a treemap so that the entries are in a consistent order

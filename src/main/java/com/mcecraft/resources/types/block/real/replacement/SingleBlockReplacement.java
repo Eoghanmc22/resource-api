@@ -1,13 +1,14 @@
 package com.mcecraft.resources.types.block.real.replacement;
 
 import net.minestom.server.instance.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 public class SingleBlockReplacement implements BlockReplacement {
 
     private final Block block;
     private boolean used = false;
 
-    public SingleBlockReplacement(Block block) {
+    public SingleBlockReplacement(@NotNull Block block) {
         this.block = block;
     }
 

@@ -5,7 +5,6 @@ import com.mcecraft.resources.ResourceApi;
 import com.mcecraft.resources.mojang.DefaultResourcePack;
 import com.mcecraft.resources.testserver.blocks.Blocks;
 import com.mcecraft.resources.testserver.items.Items;
-import com.mcecraft.resources.types.block.spawner.SpawnerBlockResource;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
@@ -55,7 +54,6 @@ public class Main {
 
             pl.setResourcePack(ResourcePack.forced("http://localhost:8081/pack.zip", resourcePack.getHash()));
             pl.getInventory().addItemStack(Items.TEST.create());
-            pl.getInventory().addItemStack(((SpawnerBlockResource)Blocks.TEST.getBlockResource()).getItem().createItemStack());
             pl.teleport(new Pos(0, 45, 0));
             pl.setGameMode(GameMode.CREATIVE);
         });

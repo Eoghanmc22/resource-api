@@ -14,9 +14,9 @@ public class Loc {
     public static final String UNKNOWN = "unknown";
     public static final NamespaceID UNKNOWN_ID = NamespaceID.from(UNKNOWN, UNKNOWN);
 
-    private final @NotNull NamespaceID namespace;
-    private final @NotNull String type;
-    private final @NotNull String path;
+    private final NamespaceID namespace;
+    private final String type;
+    private final String path;
 
     private Loc(@NotNull NamespaceID namespace, @NotNull String type) {
         this.namespace = namespace;
@@ -50,15 +50,15 @@ public class Loc {
         return path;
     }
 
-    public static Loc any(@NotNull String path) {
+    public static @NotNull Loc any(@NotNull String path) {
         return new Loc(path);
     }
 
-    public static Loc of(@NotNull NamespaceID namespace, @NotNull String type) {
+    public static @NotNull Loc of(@NotNull NamespaceID namespace, @NotNull String type) {
         return new Loc(namespace, type);
     }
 
-    public static Loc prefix(@NotNull NamespaceID namespace, @NotNull String type, @NotNull String prefix) {
+    public static @NotNull Loc prefix(@NotNull NamespaceID namespace, @NotNull String type, @NotNull String prefix) {
         return new Loc(Utils.prefixPath(namespace, prefix), type);
     }
 }

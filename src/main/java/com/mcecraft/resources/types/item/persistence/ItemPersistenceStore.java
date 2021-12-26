@@ -7,5 +7,5 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemPersistenceStore implements PersistenceStore {
-    Map<NamespaceID, ItemPersistenceData> data = new HashMap<>();
+    final Map<NamespaceID, ItemPersistenceData> data = new HashMap<>();
 }

@@ -2,6 +2,7 @@ package com.mcecraft.resources.gson;
 
 import com.google.gson.*;
 import com.mcecraft.resources.persistence.PersistenceStore;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
@@ -9,7 +10,7 @@ import java.lang.reflect.Type;
 public class PersistenceStoreTypeAdapter implements JsonSerializer<PersistenceStore>, JsonDeserializer<PersistenceStore> {
 
     @Override
-    public PersistenceStore deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public @NotNull PersistenceStore deserialize(@NotNull JsonElement json, @NotNull Type typeOfT, @NotNull JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
         String clazzName = obj.get("clazz").getAsString();
@@ -27,7 +28,7 @@ public class PersistenceStoreTypeAdapter implements JsonSerializer<PersistenceSt
     }
 
     @Override
-    public JsonElement serialize(PersistenceStore src, Type typeOfSrc, JsonSerializationContext context) {
+    public @NotNull JsonElement serialize(@NotNull PersistenceStore src, @NotNull Type typeOfSrc, @NotNull JsonSerializationContext context) {
         JsonObject obj = new JsonObject();
 
         obj.add("class", new JsonPrimitive(typeOfSrc.getTypeName()));

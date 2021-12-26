@@ -59,7 +59,7 @@ public class ItemResource extends Resource {
 		this.customModelId = customModelId;
 	}
 
-	public ItemStack createItemStack() {
+	public @NotNull ItemStack createItemStack() {
 		if (customModelId == 0) {
 			throw new RuntimeException("The resource pack has not been generated yet");
 		}

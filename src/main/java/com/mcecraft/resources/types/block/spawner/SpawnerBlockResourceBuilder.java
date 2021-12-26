@@ -26,18 +26,18 @@ public class SpawnerBlockResourceBuilder extends ResourceBuilder<SpawnerBlockRes
         return new SpawnerBlockResource(getResourceType(), getNamespaceID(), item.build(false));
     }
 
-    public SpawnerBlockResourceBuilder model(@NotNull Data model) {
+    public @NotNull SpawnerBlockResourceBuilder model(@NotNull Data model) {
         // inject the correct display settings
         item.model(Json.lazy(() -> Utils.mergeJson(Json.of(model).json(), SpawnerBlockType.DISPLAY_SETTINGS)));
         return this;
     }
 
-    public SpawnerBlockResourceBuilder include(@NotNull UnaryOperator<IncludedResourceBuilder> resource) {
+    public @NotNull SpawnerBlockResourceBuilder include(@NotNull UnaryOperator<IncludedResourceBuilder> resource) {
         item.include(resource);
         return this;
     }
 
-    public SpawnerBlockResourceBuilder persist(boolean persist) {
+    public @NotNull SpawnerBlockResourceBuilder persist(boolean persist) {
         item.persist(persist);
         return this;
     }

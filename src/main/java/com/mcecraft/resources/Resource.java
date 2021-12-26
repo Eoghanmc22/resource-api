@@ -4,8 +4,8 @@ import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class Resource {
-	private final @NotNull ResourceType<? extends Resource, ?, ?> resourceType;
-	private final @NotNull NamespaceID namespaceID;
+	private final ResourceType<? extends Resource, ?, ?> resourceType;
+	private final NamespaceID namespaceID;
 
 	public Resource(@NotNull ResourceType<? extends Resource, ?, ?> resourceType, @NotNull NamespaceID namespaceID) {
 		this.resourceType = resourceType;

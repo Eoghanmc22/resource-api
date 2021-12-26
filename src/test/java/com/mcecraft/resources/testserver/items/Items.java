@@ -8,27 +8,17 @@ import com.mcecraft.resources.types.item.ItemType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Items {
+public record Items(@NotNull ItemResource itemResource) {
 
-    private final ItemResource itemResource;
-
-    public Items(ItemResource itemResource) {
-        this.itemResource = itemResource;
-    }
-
-    public ItemResource getItemResource() {
-        return itemResource;
-    }
-
-    public ItemStack create() {
+    public @NotNull ItemStack create() {
         return itemResource.createItemStack();
     }
-
 
 
     public static final Map<NamespaceID, Items> REGISTRY = new HashMap<>();
@@ -46,8 +36,8 @@ public class Items {
         }
     }
 
-    private static void add(Items item) {
-        REGISTRY.put(item.getItemResource().getNamespaceID(), item);
+    private static void add(@NotNull Items item) {
+        REGISTRY.put(item.itemResource().getNamespaceID(), item);
     }
 
 }

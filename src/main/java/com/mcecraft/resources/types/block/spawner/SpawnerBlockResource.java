@@ -13,7 +13,7 @@ import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 import org.jglrxavpok.hephaistos.nbt.NBTType;
 
 public class SpawnerBlockResource extends Resource implements BlockResource {
-    private final @NotNull ItemResource item;
+    private final ItemResource item;
 
     public SpawnerBlockResource(@NotNull ResourceType<? extends Resource, ?, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull ItemResource item) {
         super(resourceType, namespaceID);
@@ -42,7 +42,6 @@ public class SpawnerBlockResource extends Resource implements BlockResource {
                 }));
             }));
         });
-
 
         return Block.SPAWNER.withNbt(spawnerNBT);
     }

@@ -36,7 +36,7 @@ public class ResourceApi {
         resources.add(resource);
     }
 
-    public static @NotNull DynamicResourcePack generateResourcePack(String packDescription) {
+    public static @NotNull DynamicResourcePack generateResourcePack(@NotNull String packDescription) {
         DynamicResourcePack resourcePack = new DynamicResourcePack();
         GlobalPersistenceStore data = loadDataStores();
 
@@ -84,23 +84,23 @@ public class ResourceApi {
         private final ResourceType<R, B, P> resourceType;
         private final Map<NamespaceID, R> registeredResources = new ConcurrentHashMap<>();
 
-        private ResourceContainer(ResourceType<R, B, P> resourceType) {
+        private ResourceContainer(@NotNull ResourceType<R, B, P> resourceType) {
             this.resourceType = resourceType;
         }
 
-        public ResourceType<R, B, P> getResourceType() {
+        public @NotNull ResourceType<R, B, P> getResourceType() {
             return resourceType;
         }
 
-        public R lookup(NamespaceID id) {
+        public @Nullable R lookup(@NotNull NamespaceID id) {
             return registeredResources.get(id);
         }
 
-        public void register(NamespaceID id, R resource) {
+        public void register(@NotNull NamespaceID id, @NotNull R resource) {
             registeredResources.put(id, resource);
         }
 
-        public Map<NamespaceID, R> getRegisteredResources() {
+        public @NotNull Map<NamespaceID, R> getRegisteredResources() {
             return registeredResources;
         }
 

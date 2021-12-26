@@ -35,27 +35,27 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
 
         return new RealBlockResource(getResourceType(), getNamespaceID(), blockReplacement, includes, models, persist);
     }
-    public RealBlockResourceBuilder blockReplacement(@NotNull BlockReplacement blockReplacement) {
+    public @NotNull RealBlockResourceBuilder blockReplacement(@NotNull BlockReplacement blockReplacement) {
         this.blockReplacement = blockReplacement;
         return this;
     }
 
-    public RealBlockResourceBuilder include(@NotNull UnaryOperator<@NotNull IncludedResourceBuilder> resource) {
+    public @NotNull RealBlockResourceBuilder include(@NotNull UnaryOperator<@NotNull IncludedResourceBuilder> resource) {
         includes.add(resource.apply(ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)).build(false));
         return this;
     }
 
-    public RealBlockResourceBuilder model(@NotNull Data model) {
+    public @NotNull RealBlockResourceBuilder model(@NotNull Data model) {
         models.add(new ObjectObjectImmutablePair<>(model, BlockModelMeta.from(Utils.prefixPath(getNamespaceID(), "block/"))));
         return this;
     }
 
-    public RealBlockResourceBuilder model(@NotNull Data model, BlockModelMeta meta) {
+    public @NotNull RealBlockResourceBuilder model(@NotNull Data model, BlockModelMeta meta) {
         models.add(new ObjectObjectImmutablePair<>(model, meta));
         return this;
     }
 
-    public RealBlockResourceBuilder persist(boolean persist) {
+    public @NotNull RealBlockResourceBuilder persist(boolean persist) {
         this.persist = persist;
         return this;
     }

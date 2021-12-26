@@ -16,9 +16,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class RealBlockResource extends Resource implements BlockResource {
-    private final @NotNull BlockReplacement blockReplacement;
-    private final @NotNull List<IncludedResource> includes;
-    private final @NotNull Set<Pair<Data, BlockModelMeta>> models;
+    private final BlockReplacement blockReplacement;
+    private final List<IncludedResource> includes;
+    private final Set<Pair<Data, BlockModelMeta>> models;
 
     private final boolean persist;
 

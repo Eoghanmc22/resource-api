@@ -75,7 +75,7 @@ public interface Json extends Data {
         return lazy(() -> Utils.toJsonTree(obj));
     }
 
-    static @NotNull Json lazy(Json json) {
+    static @NotNull Json lazy(@NotNull Json json) {
         Once<JsonElement> jsonCache = new Once<>(json::json);
         Once<byte[]> bytesCache = new Once<>(json::bytes);
 

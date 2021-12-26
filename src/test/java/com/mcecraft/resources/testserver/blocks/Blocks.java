@@ -9,27 +9,17 @@ import com.mcecraft.resources.types.block.real.RealBlockResourceType;
 import com.mcecraft.resources.types.block.spawner.SpawnerBlockType;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.NamespaceID;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Blocks {
+public record Blocks(@NotNull BlockResource blockResource) {
 
-    private final BlockResource blockResource;
-
-    public Blocks(BlockResource itemResource) {
-        this.blockResource = itemResource;
-    }
-
-    public BlockResource getBlockResource() {
-        return blockResource;
-    }
-
-    public Block create() {
+    public @NotNull Block create() {
         return blockResource.createBlock();
     }
-
 
 
     public static final Map<NamespaceID, Blocks> REGISTRY = new HashMap<>();
@@ -54,8 +44,8 @@ public class Blocks {
         }
     }
 
-    private static void add(Blocks block) {
-        REGISTRY.put(block.getBlockResource().getNamespaceID(), block);
+    private static void add(@NotNull Blocks block) {
+        REGISTRY.put(block.blockResource().getNamespaceID(), block);
     }
 
 }

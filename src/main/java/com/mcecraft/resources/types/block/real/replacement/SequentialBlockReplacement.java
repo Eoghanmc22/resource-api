@@ -12,7 +12,7 @@ public class SequentialBlockReplacement implements BlockReplacement {
     private final Block blockType;
     private short currentId = 1;
 
-    private SequentialBlockReplacement(Block blockType) {
+    private SequentialBlockReplacement(@NotNull Block blockType) {
         this.blockType = blockType;
 
         short possibleEndId = -1;
@@ -45,7 +45,7 @@ public class SequentialBlockReplacement implements BlockReplacement {
 
     private static final Map<Block, SequentialBlockReplacement> blockReplacements = new HashMap<>();
 
-    public static @NotNull SequentialBlockReplacement of(Block block) {
+    public static @NotNull SequentialBlockReplacement of(@NotNull Block block) {
         Block blockType = Block.fromBlockId(block.id());
 
         if (blockType == null) {

@@ -4,6 +4,7 @@ import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.utils.Loc;
 import com.mcecraft.resources.utils.Utils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,8 +15,8 @@ import java.util.zip.ZipOutputStream;
 
 public class DynamicResourcePack {
     private final Map<Loc, Data> resourcePackIncludedFiles = new ConcurrentHashMap<>();
-    private volatile byte [] bytes = null;
-    private volatile String hash = null;
+    private volatile byte @UnknownNullability [] bytes = null;
+    private volatile @UnknownNullability String hash = null;
 
     public void include(@NotNull Loc path, @NotNull Data data) {
         if (resourcePackIncludedFiles.put(path, data) != null) {

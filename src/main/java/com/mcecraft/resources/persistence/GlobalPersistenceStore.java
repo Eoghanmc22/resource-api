@@ -10,7 +10,7 @@ import java.util.Map;
 public class GlobalPersistenceStore {
     private final Map<NamespaceID, PersistenceStore> store = new HashMap<>();
 
-    public <P extends PersistenceStore> PersistenceProvider<P> get(ResourceType<?, ?, P> resourceType) {
+    public <P extends PersistenceStore> @NotNull PersistenceProvider<P> get(@NotNull ResourceType<?, ?, P> resourceType) {
         NamespaceID id = resourceType.getPersistenceId();
 
         if (id == null) {
@@ -20,7 +20,7 @@ public class GlobalPersistenceStore {
         return new PersistenceProvider<>((P) store.get(id));
     }
 
-    public <P extends PersistenceStore> void store(ResourceType<?, ?, P> resourceType, @NotNull PersistenceProvider<P> provider) {
+    public <P extends PersistenceStore> void store(@NotNull ResourceType<?, ?, P> resourceType, @NotNull PersistenceProvider<P> provider) {
         NamespaceID id = resourceType.getPersistenceId();
         P data = provider.getData();
 
