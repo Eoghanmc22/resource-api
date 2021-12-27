@@ -170,7 +170,7 @@ public class DefaultResourcePack {
         Path path = DEFAULT_PACK.resolve(loc.getPath());
 
         if (!Files.exists(path)) {
-            throw new RuntimeException("No assist at `" + loc.getPath() + " was found in the default resource pack");
+            throw new RuntimeException("No asset at `" + loc.getPath() + " was found in the default resource pack");
         }
 
         if (jsonMatcher.matches(path)) {

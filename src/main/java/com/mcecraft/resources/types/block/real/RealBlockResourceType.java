@@ -93,7 +93,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
                     Block blockType = Block.fromBlockId(blockTypeId);
 
                     if (blockType == null) {
-                        throw new RuntimeException("No block type was found for block id " + blockTypeId);
+                        throw new NullPointerException("No block type was found for block id " + blockTypeId);
                     }
 
                     Map<String, Set<BlockModelMeta>> state2model = new HashMap<>();
@@ -117,7 +117,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
 
                         Block blockState = Block.fromStateId(blockStateId);
                         if (blockState == null) {
-                            throw new RuntimeException("No block was found for state id " + blockStateId + " for " + resource.getNamespaceID());
+                            throw new NullPointerException("No block was found for state id " + blockStateId + " for " + resource.getNamespaceID());
                         }
 
                         // get the data the client needs to know about for this block

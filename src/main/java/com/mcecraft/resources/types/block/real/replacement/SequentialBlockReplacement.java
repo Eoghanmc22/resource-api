@@ -59,7 +59,7 @@ public class SequentialBlockReplacement implements BlockReplacement {
         Block blockType = Block.fromBlockId(block.id());
 
         if (blockType == null) {
-            throw new RuntimeException("No block type could be found for " + block.namespace());
+            throw new NullPointerException("No block type could be found for " + block.namespace());
         }
 
         return blockReplacements.computeIfAbsent(blockType, SequentialBlockReplacement::new);
