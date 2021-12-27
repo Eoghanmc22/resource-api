@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ResourceApi {
-    private static final ResourceGenerator GLOBAL = new ResourceGenerator();
+    public static final ResourceGenerator GLOBAL = new ResourceGenerator();
 
     public static <R extends Resource, B extends ResourceBuilder<R>> @NotNull B create(@NotNull ResourceType<R, B, ?> resourceType, @NotNull NamespaceID namespaceID) {
         return GLOBAL.create(resourceType, namespaceID);
