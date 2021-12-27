@@ -21,9 +21,6 @@ public class Main {
     public static void main(String[] args) {
         MinecraftServer init = MinecraftServer.init();
 
-        //This would normally be called by the extension initialize function
-        DefaultResourcePack.generate();
-
         Items.init();
 
         for (NamespaceID item : Items.REGISTRY.keySet()) {
