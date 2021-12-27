@@ -1,5 +1,5 @@
 {
-  "entrypoint": "com.mcecraft.extension.ResourceExtension",
-  "name": "Resource Api",
+  "entrypoint": "com.mcecraft.resources.ResourceExtension",
+  "name": "ResourceApi",
   "version": "1.0"
 }
