@@ -11,11 +11,15 @@ import java.net.InetSocketAddress;
 
 public class PackServer {
 
+    private static String path = null;
+
     public static void run(@NotNull DynamicResourcePack rp) throws IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress("0.0.0.0", 8081), 0);
 
         byte[] resourcePack = rp.getBytes();
-        httpServer.createContext("/pack.zip", exchange1 -> {
+        path = "/" + rp.getHash() + ".zip";
+
+        httpServer.createContext(path, exchange1 -> {
             try (HttpExchange exchange = exchange1) {
                 if ("GET".equals(exchange.getRequestMethod())) {
                     exchange.sendResponseHeaders(200, resourcePack.length);
@@ -30,5 +34,9 @@ public class PackServer {
         httpServer.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.stop(5)));
+    }
+
+    public static String getPath() {
+        return path;
     }
 }

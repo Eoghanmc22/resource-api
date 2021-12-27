@@ -49,7 +49,7 @@ public class Main {
         MinecraftServer.getGlobalEventHandler().addListener(PlayerSpawnEvent.class, (event) -> {
             Player pl = event.getPlayer();
 
-            pl.setResourcePack(ResourcePack.forced("http://localhost:8081/pack.zip", resourcePack.getHash()));
+            pl.setResourcePack(ResourcePack.forced("http://localhost:8081" + PackServer.getPath(), resourcePack.getHash()));
             pl.getInventory().addItemStack(Items.TEST1.create());
             pl.getInventory().addItemStack(Items.TEST2.create());
             pl.teleport(new Pos(0, 45, 0));
