@@ -7,5 +7,5 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RealBlockPersistenceStore implements PersistenceStore {
-    final Map<NamespaceID, RealBlockPersistenceData> data = new HashMap<>();
+    public final Map<NamespaceID, RealBlockPersistenceData> data = new HashMap<>();
 }

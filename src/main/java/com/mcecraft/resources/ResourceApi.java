@@ -50,9 +50,9 @@ public class ResourceApi {
             Resource resource = queue.poll();
             ResourceType<?, ?, ?> resourceType = resource.getResourceType();
 
-            final Generator<?, ?> generator = generatorMap.computeIfAbsent(resourceType, ResourceType::createGenerator);
-
             PersistenceProvider<?> dataProvider = data.get(resourceType);
+
+            final Generator<?, ?> generator = generatorMap.computeIfAbsent(resourceType, resourceType1 -> resourceType1.__createGenerator(dataProvider));
 
             queue.addAll(generator.__dependencies(resource, dataProvider));
         }
@@ -60,20 +60,30 @@ public class ResourceApi {
 
         resourcePack.generate();
 
+        saveDataStores(data);
+
         return resourcePack;
     }
 
     private static @NotNull GlobalPersistenceStore loadDataStores() {
-        try (Reader reader = Files.newBufferedReader(DATA_STORAGE)) {
-            return Utils.GSON.fromJson(reader, GlobalPersistenceStore.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (Files.exists(DATA_STORAGE)) {
+            try (Reader reader = Files.newBufferedReader(DATA_STORAGE)) {
+                return Utils.GSON.fromJson(reader, GlobalPersistenceStore.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return new GlobalPersistenceStore();
         }
     }
 
     private static void saveDataStores(@NotNull GlobalPersistenceStore dataStores) {
-        try (Writer writer = Files.newBufferedWriter(DATA_STORAGE)) {
-            Utils.GSON.toJson(dataStores, GlobalPersistenceStore.class, writer);
+        try {
+            Files.createDirectories(DATA_STORAGE.getParent());
+
+            try (Writer writer = Files.newBufferedWriter(DATA_STORAGE)) {
+                Utils.GSON.toJson(dataStores, GlobalPersistenceStore.class, writer);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

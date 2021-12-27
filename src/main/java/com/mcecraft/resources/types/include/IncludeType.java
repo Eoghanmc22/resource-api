@@ -22,7 +22,7 @@ public class IncludeType implements ResourceType<IncludedResource, IncludedResou
 	}
 
 	@Override
-	public @NotNull Generator<IncludedResource, NullPersistenceStore> createGenerator() {
+	public @NotNull Generator<IncludedResource, NullPersistenceStore> createGenerator(@NotNull PersistenceProvider<NullPersistenceStore> _store) {
 		return new Generator<>() {
 
 			private final Set<IncludedResource> resources = new HashSet<>();

@@ -14,20 +14,9 @@ public class GlobalPersistenceStore {
         NamespaceID id = resourceType.getPersistenceId();
 
         if (id == null) {
-            return new PersistenceProvider<>(null);
+            return new PersistenceProvider<>(null, null, null);
         }
 
-        return new PersistenceProvider<>((P) store.get(id));
-    }
-
-    public <P extends PersistenceStore> void store(@NotNull ResourceType<?, ?, P> resourceType, @NotNull PersistenceProvider<P> provider) {
-        NamespaceID id = resourceType.getPersistenceId();
-        P data = provider.getData();
-
-        if (id == null) {
-            return;
-        }
-
-        store.put(id, data);
+        return new PersistenceProvider<>((P) store.get(id), id, store);
     }
 }

@@ -3,7 +3,7 @@ package com.mcecraft.resources.utils;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
-public class Loc {
+public class Loc implements Comparable<Loc> {
     public static final String BLOCK_STATES = "blockstates";
     public static final String MODELS = "models";
     public static final String TEXTURES = "textures";
@@ -48,6 +48,26 @@ public class Loc {
 
     public @NotNull String getPath() {
         return path;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Loc other = (Loc) o;
+
+        return this.path.equals(other.path);
+    }
+
+    @Override
+    public int hashCode() {
+        return path.hashCode();
+    }
+
+    @Override
+    public int compareTo(@NotNull Loc o) {
+        return this.path.compareTo(o.path);
     }
 
     public static @NotNull Loc any(@NotNull String path) {

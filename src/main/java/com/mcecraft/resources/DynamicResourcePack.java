@@ -9,18 +9,19 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class DynamicResourcePack {
-    private final Map<Loc, Data> resourcePackIncludedFiles = new ConcurrentHashMap<>();
+
+    // a TreeMap is needed to make sure that files are added in a consistent order
+    private final Map<Loc, Data> resourcePackIncludedFiles = new TreeMap<>();
     private volatile byte @UnknownNullability [] bytes = null;
     private volatile @UnknownNullability String hash = null;
 
     public void include(@NotNull Loc path, @NotNull Data data) {
         if (resourcePackIncludedFiles.put(path, data) != null) {
-            throw new RuntimeException("Duplicate file in resource pack!");
+            throw new RuntimeException("Duplicate file `" + path.getPath() + "` in resource pack!");
         }
     }
 

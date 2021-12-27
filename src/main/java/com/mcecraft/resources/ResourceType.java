@@ -1,5 +1,6 @@
 package com.mcecraft.resources;
 
+import com.mcecraft.resources.persistence.PersistenceProvider;
 import com.mcecraft.resources.persistence.PersistenceStore;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -14,5 +15,6 @@ public interface ResourceType<R extends Resource, B extends ResourceBuilder<R>, 
 
     @NotNull B makeBuilder(@NotNull NamespaceID namespaceID);
 
-    @NotNull Generator<R, P> createGenerator();
+    default @NotNull Generator<R, P> __createGenerator(@NotNull PersistenceProvider<?> dataProvider) { return createGenerator((PersistenceProvider<P>) dataProvider); }
+    @NotNull Generator<R, P> createGenerator(@NotNull PersistenceProvider<P> dataProvider);
 }

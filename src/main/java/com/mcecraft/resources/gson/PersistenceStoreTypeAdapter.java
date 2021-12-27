@@ -6,14 +6,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-//TODO this needs to be tested
+//TODO this needs to be tested more
 public class PersistenceStoreTypeAdapter implements JsonSerializer<PersistenceStore>, JsonDeserializer<PersistenceStore> {
 
     @Override
     public @NotNull PersistenceStore deserialize(@NotNull JsonElement json, @NotNull Type typeOfT, @NotNull JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
-        String clazzName = obj.get("clazz").getAsString();
+        String clazzName = obj.get("class").getAsString();
         Class<?> clazz;
 
         try {
@@ -31,8 +31,10 @@ public class PersistenceStoreTypeAdapter implements JsonSerializer<PersistenceSt
     public @NotNull JsonElement serialize(@NotNull PersistenceStore src, @NotNull Type typeOfSrc, @NotNull JsonSerializationContext context) {
         JsonObject obj = new JsonObject();
 
-        obj.add("class", new JsonPrimitive(typeOfSrc.getTypeName()));
-        obj.add("data", context.serialize(src, typeOfSrc));
+        Class<?> clazz = src.getClass();
+
+        obj.add("class", new JsonPrimitive(clazz.getTypeName()));
+        obj.add("data", context.serialize(src, clazz));
 
         return obj;
     }

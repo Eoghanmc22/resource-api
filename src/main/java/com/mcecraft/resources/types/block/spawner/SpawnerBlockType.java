@@ -29,7 +29,7 @@ public class SpawnerBlockType implements ResourceType<SpawnerBlockResource, Spaw
     }
 
     @Override
-    public @NotNull Generator<SpawnerBlockResource, NullPersistenceStore> createGenerator() {
+    public @NotNull Generator<SpawnerBlockResource, NullPersistenceStore> createGenerator(@NotNull PersistenceProvider<NullPersistenceStore> _store) {
         return new Generator<>() {
             @Override
             public @NotNull Collection<? extends Resource> dependencies(@NotNull SpawnerBlockResource resource, @NotNull PersistenceProvider<NullPersistenceStore> _store) {

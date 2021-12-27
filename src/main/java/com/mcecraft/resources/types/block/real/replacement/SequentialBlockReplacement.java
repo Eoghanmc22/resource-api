@@ -1,6 +1,8 @@
 package com.mcecraft.resources.types.block.real.replacement;
 
+import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -31,9 +33,17 @@ public class SequentialBlockReplacement implements BlockReplacement {
     }
 
     @Override
-    public short getNextBlock() {
+    public short getNextBlock(@NotNull Short2ObjectMap<NamespaceID> alreadyClaimed, @NotNull NamespaceID id) {
+        while (alreadyClaimed.containsKey(currentId)) {
+            currentId++;
+        }
         checkId();
-        return currentId++;
+        return currentId;
+    }
+
+    @Override
+    public int getBlockTypeId() {
+        return blockType.id();
     }
 
     private void checkId() {

@@ -23,16 +23,24 @@ public record Items(@NotNull ItemResource itemResource) {
 
     public static final Map<NamespaceID, Items> REGISTRY = new HashMap<>();
 
-    public static final Items TEST = new Items(ResourceApi.create(ItemType.INSTANCE, NamespaceID.from("demo:test_item"))
+    public static final Items TEST1 = new Items(ResourceApi.create(ItemType.INSTANCE, NamespaceID.from("demo:test_item"))
             .model(Data.of(Path.of("resources/models/test.json")))
             .include(b -> b.file(Loc.of(NamespaceID.from("demo:texture1"), Loc.TEXTURES), Path.of("resources/textures/texture1.png")))
             .material(Material.FIREWORK_ROCKET)
             .build()
     );
+    public static final Items TEST2 = new Items(ResourceApi.create(ItemType.INSTANCE, NamespaceID.from("demo:test_item2"))
+            .model(Data.of(Path.of("resources/models/test2.json")))
+            .include(b -> b.file(Loc.of(NamespaceID.from("demo:texture4"), Loc.TEXTURES), Path.of("resources/textures/texture4.png")))
+            .material(Material.FIREWORK_ROCKET)
+            .build()
+    );
+
 
     public static void init() {
         if (REGISTRY.isEmpty()) {
-            add(TEST);
+            add(TEST1);
+            add(TEST2);
         }
     }
 

@@ -17,7 +17,7 @@ import java.util.function.UnaryOperator;
 
 public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource> {
 
-    private BlockReplacement blockReplacement;
+    private BlockReplacement blockReplacement = BlockReplacement.NOTE_BLOCK;
     private final List<IncludedResource> includes = new ArrayList<>();
     private final Set<Pair<Data, BlockModelMeta>> models = new HashSet<>();
 

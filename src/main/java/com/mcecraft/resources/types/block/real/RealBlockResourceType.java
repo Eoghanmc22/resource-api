@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mcecraft.resources.*;
 import com.mcecraft.resources.persistence.PersistenceProvider;
+import com.mcecraft.resources.types.block.real.persistence.RealBlockPersistenceData;
 import com.mcecraft.resources.types.block.real.persistence.RealBlockPersistenceStore;
 import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.utils.Data;
@@ -11,6 +12,10 @@ import com.mcecraft.resources.utils.Json;
 import com.mcecraft.resources.utils.Loc;
 import com.mcecraft.resources.utils.Utils;
 import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -35,29 +40,31 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
     }
 
     @Override
-    public @NotNull Generator<RealBlockResource, RealBlockPersistenceStore> createGenerator() {
+    public @NotNull Generator<RealBlockResource, RealBlockPersistenceStore> createGenerator(@NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
         return new Generator<>() {
 
-            final Map<Block, Set<RealBlockResource>> resources = new HashMap<>();
+            final Int2ObjectMap<Set<RealBlockResource>> resources = new Int2ObjectOpenHashMap<>();
+            final Short2ObjectMap<NamespaceID> claimedStates = new Short2ObjectOpenHashMap<>();
+
+            {
+                RealBlockPersistenceStore data = dataProvider.getData();
+                if (data != null) {
+                    for (Map.Entry<NamespaceID, RealBlockPersistenceData> entry : data.data.entrySet()) {
+                        NamespaceID id = entry.getKey();
+                        RealBlockPersistenceData blockData = entry.getValue();
+
+                        NamespaceID maybeOld = claimedStates.put(blockData.stateId(), id);
+
+                        if (maybeOld != null) {
+                            throw new RuntimeException("Both " + maybeOld.asString() + " and " + id + " are claiming the same state id (" + blockData.stateId() + ")");
+                        }
+                    }
+                }
+            }
 
             @Override
             public @NotNull Collection<? extends Resource> dependencies(@NotNull RealBlockResource resource, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
-                short blockState = resource.getBlockReplacement().getNextBlock();
-                Block block = Block.fromStateId(blockState);
-
-                if (block == null) {
-                    throw new RuntimeException("No block was found for state id " + blockState + " for " + resource.getNamespaceID());
-                }
-
-                Block blockType = Block.fromBlockId(block.id());
-
-                if (blockType == null) {
-                    throw new RuntimeException("No blockType was found for block " + block.namespace() + " for " + resource.getNamespaceID());
-                }
-
-                resource.setStateId(blockState);
-
-                resources.computeIfAbsent(blockType, (key) -> new HashSet<>()).add(resource);
+                resources.computeIfAbsent(resource.getBlockReplacement().getBlockTypeId(), (key) -> new HashSet<>()).add(resource);
 
                 Set<Resource> includes = new HashSet<>(resource.getIncludes());
 
@@ -77,26 +84,53 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
 
             @Override
             public void generate(@NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
-                for (Map.Entry<Block, Set<RealBlockResource>> typeEntry : resources.entrySet()) {
-                    Block blockType = typeEntry.getKey();
+                RealBlockPersistenceStore data = dataProvider.getDataOr(RealBlockPersistenceStore::new);
+
+                for (Int2ObjectMap.Entry<Set<RealBlockResource>> typeEntry : resources.int2ObjectEntrySet()) {
+                    int blockTypeId = typeEntry.getIntKey();
                     Set<RealBlockResource> resourceSet = typeEntry.getValue();
+
+                    Block blockType = Block.fromBlockId(blockTypeId);
+
+                    if (blockType == null) {
+                        throw new RuntimeException("No block type was found for block id " + blockTypeId);
+                    }
 
                     Map<String, Set<BlockModelMeta>> state2model = new HashMap<>();
 
                     for (RealBlockResource resource : resourceSet) {
-                        Set<BlockModelMeta> meta = new HashSet<>();
+                        // get a state id for this resource
+                        short blockStateId;
 
-                        for (Pair<Data, BlockModelMeta> model : resource.getModels()) {
-                            meta.add(model.right());
+                        RealBlockPersistenceData blockData = data.data.get(resource.getNamespaceID());
+                        if (blockData != null) {
+                            blockStateId = blockData.stateId();
+                        } else {
+                            blockStateId = resource.getBlockReplacement().getNextBlock(claimedStates, resource.getNamespaceID());
+                            claimedStates.put(blockStateId, resource.getNamespaceID());
+
+                            if (resource.persist()) {
+                                data.data.put(resource.getNamespaceID(), new RealBlockPersistenceData(blockType.namespace(), blockStateId));
+                            }
+                        }
+                        resource.setStateId(blockStateId);
+
+                        Block blockState = Block.fromStateId(blockStateId);
+                        if (blockState == null) {
+                            throw new RuntimeException("No block was found for state id " + blockStateId + " for " + resource.getNamespaceID());
                         }
 
-                        Block block = Block.fromStateId(resource.getStateId());
+                        // get the data the client needs to know about for this block
+                        Set<BlockModelMeta> metaSet = new HashSet<>();
+                        for (Pair<Data, BlockModelMeta> model : resource.getModels()) {
+                            metaSet.add(model.right());
+                        }
 
-                        Objects.requireNonNull(block, "Something went quite wrong and the RealBlockResource " + resource.getNamespaceID() + " was assigned the invalid stateId " + resource.getStateId());
-
-                        state2model.put(generateStateString(block.properties()), meta);
+                        state2model.put(generateStateString(blockState.properties()), metaSet);
                     }
 
+
+                    // generate the json files for the client
                     JsonObject blockStates = new JsonObject();
 
                     JsonObject variants = new JsonObject();

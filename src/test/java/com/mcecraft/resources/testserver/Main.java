@@ -53,7 +53,8 @@ public class Main {
             Player pl = event.getPlayer();
 
             pl.setResourcePack(ResourcePack.forced("http://localhost:8081/pack.zip", resourcePack.getHash()));
-            pl.getInventory().addItemStack(Items.TEST.create());
+            pl.getInventory().addItemStack(Items.TEST1.create());
+            pl.getInventory().addItemStack(Items.TEST2.create());
             pl.teleport(new Pos(0, 45, 0));
             pl.setGameMode(GameMode.CREATIVE);
         });
