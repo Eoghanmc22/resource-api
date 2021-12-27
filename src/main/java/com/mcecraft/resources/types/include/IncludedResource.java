@@ -1,5 +1,6 @@
 package com.mcecraft.resources.types.include;
 
+import com.mcecraft.resources.ResourceGenerator;
 import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.Resource;
 import com.mcecraft.resources.ResourceType;
@@ -14,8 +15,8 @@ public class IncludedResource extends Resource {
 
 	private final Map<Loc, Data> resources;
 
-	public IncludedResource(@NotNull ResourceType<? extends Resource, ?, ?> type, @NotNull NamespaceID namespaceID, @NotNull Map<Loc, Data> resources) {
-		super(type, namespaceID);
+	public IncludedResource(@NotNull ResourceGenerator api, @NotNull ResourceType<? extends Resource, ?, ?> type, @NotNull NamespaceID namespaceID, @NotNull Map<Loc, Data> resources) {
+		super(api, type, namespaceID);
 
 		this.resources = Collections.unmodifiableMap(resources);
 	}

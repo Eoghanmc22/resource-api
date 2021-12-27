@@ -1,5 +1,6 @@
 package com.mcecraft.resources.types.include;
 
+import com.mcecraft.resources.ResourceGenerator;
 import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.ResourceBuilder;
 import com.mcecraft.resources.ResourceType;
@@ -15,8 +16,8 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 
 	private final Map<Loc, Data> resources = new HashMap<>();
 
-	protected IncludedResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<IncludedResource, ?, ?> resourceType) {
-		super(resourceType, namespaceID);
+	protected IncludedResourceBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID, @NotNull ResourceType<IncludedResource, ?, ?> resourceType) {
+		super(api, resourceType, namespaceID);
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 			throw new NullPointerException("Incomplete builder!");
 		}
 
-		return new IncludedResource(getResourceType(), getNamespaceID(), resources);
+		return new IncludedResource(getResourceApi(), getResourceType(), getNamespaceID(), resources);
 	}
 
 	public @NotNull IncludedResourceBuilder file(@NotNull Loc loc, @NotNull Path file) {

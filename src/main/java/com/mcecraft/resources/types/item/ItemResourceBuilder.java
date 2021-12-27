@@ -22,8 +22,8 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 
 	private boolean persist = true;
 
-	protected ItemResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<ItemResource, ?, ?> resourceType) {
-		super(resourceType, namespaceID);
+	protected ItemResourceBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID, @NotNull ResourceType<ItemResource, ?, ?> resourceType) {
+		super(api, resourceType, namespaceID);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 			throw new NullPointerException("Incomplete builder!");
 		}
 
-		return new ItemResource(getResourceType(), getNamespaceID(), material, model, includes, persist);
+		return new ItemResource(getResourceApi(), getResourceType(), getNamespaceID(), material, model, includes, persist);
 	}
 
 	public @NotNull ItemResourceBuilder material(@NotNull Material material) {
@@ -46,7 +46,7 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 	}
 
 	public @NotNull ItemResourceBuilder include(@NotNull UnaryOperator<@NotNull IncludedResourceBuilder> resource) {
-		includes.add(resource.apply(ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)).build(false));
+		includes.add(resource.apply(getResourceApi().create(IncludeType.INSTANCE, Utils.INTERNAL)).build(false));
 		return this;
 	}
 

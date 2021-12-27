@@ -23,8 +23,8 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
 
     private boolean persist = true;
 
-    protected RealBlockResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<RealBlockResource, ?, ?> resourceType) {
-        super(resourceType, namespaceID);
+    protected RealBlockResourceBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID, @NotNull ResourceType<RealBlockResource, ?, ?> resourceType) {
+        super(api, resourceType, namespaceID);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
             throw new NullPointerException("Incomplete builder!");
         }
 
-        return new RealBlockResource(getResourceType(), getNamespaceID(), blockReplacement, includes, models, persist);
+        return new RealBlockResource(getResourceApi(), getResourceType(), getNamespaceID(), blockReplacement, includes, models, persist);
     }
     public @NotNull RealBlockResourceBuilder blockReplacement(@NotNull BlockReplacement blockReplacement) {
         this.blockReplacement = blockReplacement;
@@ -41,7 +41,7 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
     }
 
     public @NotNull RealBlockResourceBuilder include(@NotNull UnaryOperator<@NotNull IncludedResourceBuilder> resource) {
-        includes.add(resource.apply(ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)).build(false));
+        includes.add(resource.apply(getResourceApi().create(IncludeType.INSTANCE, Utils.INTERNAL)).build(false));
         return this;
     }
 

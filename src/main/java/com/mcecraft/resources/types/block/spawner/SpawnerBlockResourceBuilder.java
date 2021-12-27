@@ -15,15 +15,15 @@ import java.util.function.UnaryOperator;
 
 public class SpawnerBlockResourceBuilder extends ResourceBuilder<SpawnerBlockResource> {
 
-    private final @NotNull ItemResourceBuilder item = ResourceApi.create(ItemType.INSTANCE, getNamespaceID()).material(Material.PAPER);
+    private final @NotNull ItemResourceBuilder item = getResourceApi().create(ItemType.INSTANCE, getNamespaceID()).material(Material.PAPER);
 
-    protected SpawnerBlockResourceBuilder(@NotNull NamespaceID namespaceID, @NotNull ResourceType<SpawnerBlockResource, ?, ?> resourceType) {
-        super(resourceType, namespaceID);
+    protected SpawnerBlockResourceBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID, @NotNull ResourceType<SpawnerBlockResource, ?, ?> resourceType) {
+        super(api, resourceType, namespaceID);
     }
 
     @Override
     protected @NotNull SpawnerBlockResource buildImpl() {
-        return new SpawnerBlockResource(getResourceType(), getNamespaceID(), item.build(false));
+        return new SpawnerBlockResource(getResourceApi(), getResourceType(), getNamespaceID(), item.build(false));
     }
 
     public @NotNull SpawnerBlockResourceBuilder model(@NotNull Data model) {

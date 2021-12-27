@@ -17,24 +17,24 @@ public class IncludeType implements ResourceType<IncludedResource, IncludedResou
 	private IncludeType() {}
 
     @Override
-	public @NotNull IncludedResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
-		return new IncludedResourceBuilder(namespaceID, this);
+	public @NotNull IncludedResourceBuilder makeBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID) {
+		return new IncludedResourceBuilder(api, namespaceID, this);
 	}
 
 	@Override
-	public @NotNull Generator<IncludedResource, NullPersistenceStore> createGenerator(@NotNull PersistenceProvider<NullPersistenceStore> _store) {
+	public @NotNull Generator<IncludedResource, NullPersistenceStore> createGenerator(@NotNull ResourceGenerator api, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
 		return new Generator<>() {
 
 			private final Set<IncludedResource> resources = new HashSet<>();
 
 			@Override
-			public @NotNull Collection<? extends Resource> dependencies(@NotNull IncludedResource resource, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
+			public @NotNull Collection<? extends Resource> dependencies(@NotNull ResourceGenerator api, @NotNull IncludedResource resource, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
 				resources.add(resource);
 				return Collections.emptyList();
 			}
 
 			@Override
-			public void generate(@NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
+			public void generate(@NotNull ResourceGenerator api, @NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
 				for (IncludedResource resource : resources) {
 					for (Map.Entry<Loc, Data> entry : resource.getResources().entrySet()) {
 						Loc loc = entry.getKey();

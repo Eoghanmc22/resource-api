@@ -34,12 +34,12 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder,
 	}
 
 	@Override
-	public @NotNull ItemResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
-		return new ItemResourceBuilder(namespaceID, this);
+	public @NotNull ItemResourceBuilder makeBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID) {
+		return new ItemResourceBuilder(api, namespaceID, this);
 	}
 
 	@Override
-	public @NotNull Generator<ItemResource, ItemPersistenceStore> createGenerator(@NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
+	public @NotNull Generator<ItemResource, ItemPersistenceStore> createGenerator(@NotNull ResourceGenerator api, @NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
 		return new Generator<>() {
 
 			final Map<Material, Set<ItemResource>> resources = new HashMap<>();
@@ -64,14 +64,14 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder,
 			}
 
 			@Override
-			public @NotNull Collection<? extends Resource> dependencies(@NotNull ItemResource resource, @NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
+			public @NotNull Collection<? extends Resource> dependencies(@NotNull ResourceGenerator api, @NotNull ItemResource resource, @NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
 				resources.computeIfAbsent(resource.getMaterial(), (key) -> new HashSet<>()).add(resource);
 
 				Set<Resource> includes = new HashSet<>(resource.getIncludes());
 
 				NamespaceID id = resource.getNamespaceID();
 				includes.add(
-						ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)
+						api.create(IncludeType.INSTANCE, Utils.INTERNAL)
 								.data(Loc.of(id, Loc.MODELS), resource.getModel())
 								.build(false)
 				);
@@ -80,7 +80,7 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder,
 			}
 
 			@Override
-			public void generate(@NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
+			public void generate(@NotNull ResourceGenerator api, @NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<ItemPersistenceStore> dataProvider) {
 				ItemPersistenceStore data = dataProvider.getDataOr(ItemPersistenceStore::new);
 
 				for (Map.Entry<Material, Set<ItemResource>> entry : resources.entrySet()) {

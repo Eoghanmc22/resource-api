@@ -1,5 +1,6 @@
 package com.mcecraft.resources.types.item;
 
+import com.mcecraft.resources.ResourceGenerator;
 import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.Resource;
 import com.mcecraft.resources.ResourceType;
@@ -20,8 +21,8 @@ public class ItemResource extends Resource {
 
 	private int customModelId = 0;
 
-	public ItemResource(@NotNull ResourceType<? extends Resource, ?, ?> type, @NotNull NamespaceID namespaceID, @NotNull Material material, @NotNull Data model, @NotNull List<@NotNull IncludedResource> includes, boolean persist) {
-		super(type, namespaceID);
+	public ItemResource(@NotNull ResourceGenerator api, @NotNull ResourceType<? extends Resource, ?, ?> type, @NotNull NamespaceID namespaceID, @NotNull Material material, @NotNull Data model, @NotNull List<@NotNull IncludedResource> includes, boolean persist) {
+		super(api, type, namespaceID);
 
 		this.material = material;
 		this.includes = includes;

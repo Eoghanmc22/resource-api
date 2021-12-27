@@ -24,20 +24,20 @@ public class SpawnerBlockType implements ResourceType<SpawnerBlockResource, Spaw
     // Persistence is handled by ItemResource
 
     @Override
-    public @NotNull SpawnerBlockResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
-        return new SpawnerBlockResourceBuilder(namespaceID, this);
+    public @NotNull SpawnerBlockResourceBuilder makeBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID) {
+        return new SpawnerBlockResourceBuilder(api, namespaceID, this);
     }
 
     @Override
-    public @NotNull Generator<SpawnerBlockResource, NullPersistenceStore> createGenerator(@NotNull PersistenceProvider<NullPersistenceStore> _store) {
+    public @NotNull Generator<SpawnerBlockResource, NullPersistenceStore> createGenerator(@NotNull ResourceGenerator api, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
         return new Generator<>() {
             @Override
-            public @NotNull Collection<? extends Resource> dependencies(@NotNull SpawnerBlockResource resource, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
+            public @NotNull Collection<? extends Resource> dependencies(@NotNull ResourceGenerator api, @NotNull SpawnerBlockResource resource, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
                 return Collections.singleton(resource.getItem());
             }
 
             @Override
-            public void generate(@NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
+            public void generate(@NotNull ResourceGenerator api, @NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
                 rp.include(Loc.of(NamespaceID.from("resource_api", "clear"), Loc.TEXTURES), Data.ofResource("/clear.png"));
                 rp.include(Loc.of(NamespaceID.from("block/spawner"), Loc.MODELS), Data.ofResource("/hide_spawner.json"));
             }

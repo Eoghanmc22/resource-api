@@ -6,9 +6,11 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ResourceBuilder<R extends Resource> {
 
     private final ResourceType<R, ?, ?> resourceType;
+    private final ResourceGenerator api;
     private final NamespaceID namespaceID;
 
-    protected ResourceBuilder(@NotNull ResourceType<R, ?, ?> resourceType, @NotNull NamespaceID namespaceID) {
+    protected ResourceBuilder(@NotNull ResourceGenerator api, @NotNull ResourceType<R, ?, ?> resourceType, @NotNull NamespaceID namespaceID) {
+        this.api = api;
         this.namespaceID = namespaceID;
         this.resourceType = resourceType;
     }
@@ -20,12 +22,16 @@ public abstract class ResourceBuilder<R extends Resource> {
     public final @NotNull R build(boolean register) {
         R resource = buildImpl();
         if (register) {
-            ResourceApi.register(getResourceType(), getNamespaceID(), resource);
+            api.register(getResourceType(), getNamespaceID(), resource);
         }
         return resource;
     }
 
     protected abstract @NotNull R buildImpl();
+
+    protected @NotNull ResourceGenerator getResourceApi() {
+        return api;
+    }
 
     public @NotNull ResourceType<R, ?, ?> getResourceType() {
         return resourceType;

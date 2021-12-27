@@ -1,6 +1,7 @@
 package com.mcecraft.resources.types.block.spawner;
 
 import com.mcecraft.resources.Resource;
+import com.mcecraft.resources.ResourceGenerator;
 import com.mcecraft.resources.ResourceType;
 import com.mcecraft.resources.types.block.BlockResource;
 import com.mcecraft.resources.types.item.ItemResource;
@@ -15,8 +16,8 @@ import org.jglrxavpok.hephaistos.nbt.NBTType;
 public class SpawnerBlockResource extends Resource implements BlockResource {
     private final ItemResource item;
 
-    public SpawnerBlockResource(@NotNull ResourceType<? extends Resource, ?, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull ItemResource item) {
-        super(resourceType, namespaceID);
+    public SpawnerBlockResource(@NotNull ResourceGenerator api, @NotNull ResourceType<? extends Resource, ?, ?> resourceType, @NotNull NamespaceID namespaceID, @NotNull ItemResource item) {
+        super(api, resourceType, namespaceID);
 
         this.item = item;
     }

@@ -13,8 +13,8 @@ public interface ResourceType<R extends Resource, B extends ResourceBuilder<R>, 
     }
 
 
-    @NotNull B makeBuilder(@NotNull NamespaceID namespaceID);
+    @NotNull B makeBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID);
 
-    default @NotNull Generator<R, P> __createGenerator(@NotNull PersistenceProvider<?> dataProvider) { return createGenerator((PersistenceProvider<P>) dataProvider); }
-    @NotNull Generator<R, P> createGenerator(@NotNull PersistenceProvider<P> dataProvider);
+    default @NotNull Generator<R, P> __createGenerator(@NotNull ResourceGenerator api, @NotNull PersistenceProvider<?> dataProvider) { return createGenerator(api, (PersistenceProvider<P>) dataProvider); }
+    @NotNull Generator<R, P> createGenerator(@NotNull ResourceGenerator api, @NotNull PersistenceProvider<P> dataProvider);
 }

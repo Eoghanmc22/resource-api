@@ -35,12 +35,12 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
     }
 
     @Override
-    public @NotNull RealBlockResourceBuilder makeBuilder(@NotNull NamespaceID namespaceID) {
-        return new RealBlockResourceBuilder(namespaceID, this);
+    public @NotNull RealBlockResourceBuilder makeBuilder(@NotNull ResourceGenerator api, @NotNull NamespaceID namespaceID) {
+        return new RealBlockResourceBuilder(api, namespaceID, this);
     }
 
     @Override
-    public @NotNull Generator<RealBlockResource, RealBlockPersistenceStore> createGenerator(@NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
+    public @NotNull Generator<RealBlockResource, RealBlockPersistenceStore> createGenerator(@NotNull ResourceGenerator api, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
         return new Generator<>() {
 
             final Int2ObjectMap<Set<RealBlockResource>> resources = new Int2ObjectOpenHashMap<>();
@@ -63,7 +63,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
             }
 
             @Override
-            public @NotNull Collection<? extends Resource> dependencies(@NotNull RealBlockResource resource, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
+            public @NotNull Collection<? extends Resource> dependencies(@NotNull ResourceGenerator api, @NotNull RealBlockResource resource, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
                 resources.computeIfAbsent(resource.getBlockReplacement().getBlockTypeId(), (key) -> new HashSet<>()).add(resource);
 
                 Set<Resource> includes = new HashSet<>(resource.getIncludes());
@@ -73,7 +73,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
                     BlockModelMeta meta = model.right();
 
                     includes.add(
-                            ResourceApi.create(IncludeType.INSTANCE, Utils.INTERNAL)
+                            api.create(IncludeType.INSTANCE, Utils.INTERNAL)
                                     .data(Loc.of(meta.model(), Loc.MODELS), json)
                                     .build(false)
                     );
@@ -83,7 +83,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
             }
 
             @Override
-            public void generate(@NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
+            public void generate(@NotNull ResourceGenerator api, @NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<RealBlockPersistenceStore> dataProvider) {
                 RealBlockPersistenceStore data = dataProvider.getDataOr(RealBlockPersistenceStore::new);
 
                 for (Int2ObjectMap.Entry<Set<RealBlockResource>> typeEntry : resources.int2ObjectEntrySet()) {
