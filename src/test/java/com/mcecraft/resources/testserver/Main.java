@@ -4,6 +4,7 @@ import com.mcecraft.resources.DynamicResourcePack;
 import com.mcecraft.resources.ResourceApi;
 import com.mcecraft.resources.testserver.blocks.Blocks;
 import com.mcecraft.resources.testserver.items.Items;
+import com.mcecraft.resources.utils.PackServer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;

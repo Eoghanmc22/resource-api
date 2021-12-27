@@ -1,4 +1,4 @@
-package com.mcecraft.resources.testserver;
+package com.mcecraft.resources.utils;
 
 import com.mcecraft.resources.DynamicResourcePack;
 import com.sun.net.httpserver.HttpExchange;
