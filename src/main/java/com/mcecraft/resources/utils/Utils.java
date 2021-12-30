@@ -99,6 +99,19 @@ public class Utils {
      * @return the result of the merge
      */
     public static @NotNull JsonElement mergeJson(@NotNull JsonElement a, @NotNull JsonElement b) {
+        return mergeJson(a, b, true);
+    }
+
+    /**
+     * Merges the 2 json elements
+     * In the case of a merge conflict, keep the value in from a unless it is null
+     *
+     * @param a the primary json
+     * @param b the json to merge into a
+     * @param handleDisplay if display json should be handled as a special case
+     * @return the result of the merge
+     */
+    public static @NotNull JsonElement mergeJson(@NotNull JsonElement a, @NotNull JsonElement b, boolean handleDisplay) {
         if (a.getClass() != b.getClass() || a == JsonNull.INSTANCE) {
             if (a != JsonNull.INSTANCE) {
                 return a;
@@ -120,7 +133,9 @@ public class Utils {
                     continue;
                 }
 
-                if (other != null) {
+                if ("display".equals(key) && handleDisplay) {
+                    val = mergeEachDisplay(val, other);
+                } else if (other != null) {
                     val = mergeJson(val, other);
                 }
 
@@ -145,5 +160,77 @@ public class Utils {
 
         // JsonPrimitive
         return a;
+    }
+
+    private static @NotNull JsonElement mergeEachDisplay(@NotNull JsonElement a, @NotNull JsonElement b) {
+        if (!(a instanceof JsonObject objA) || !(b instanceof JsonObject objB)) {
+            return mergeJson(a, b);
+        }
+
+        for (Map.Entry<String, JsonElement> entry : objB.entrySet()) {
+            String key = entry.getKey();
+            JsonElement val = entry.getValue();
+            JsonElement other = objA.get(key);
+
+            if (val.equals(other)) {
+                continue;
+            }
+
+            if (other != null) {
+                val = mergeDisplay(val, other);
+            }
+
+            objA.add(key, val);
+        }
+
+        return objA;
+    }
+
+    private static @NotNull JsonElement mergeDisplay(@NotNull JsonElement a, @NotNull JsonElement b) {
+        if (!(a instanceof JsonObject objA) || !(b instanceof JsonObject objB)) {
+            return mergeJson(a, b);
+        }
+
+        for (Map.Entry<String, JsonElement> entry : objB.entrySet()) {
+            String key = entry.getKey();
+            JsonElement val = entry.getValue();
+            JsonElement other = objA.get(key);
+
+            if (val.equals(other)) {
+                continue;
+            }
+
+            if (other != null) {
+                if ((val instanceof JsonArray arrA) && (other instanceof JsonArray arrB) && arrA.size() == arrB.size() && arrA.size() == 3) {
+                    switch (key) {
+                        case "rotation", "translation" -> {
+                            JsonArray newVal = new JsonArray();
+
+                            newVal.add(new JsonPrimitive(arrA.get(0).getAsFloat() + arrB.get(0).getAsFloat()));
+                            newVal.add(new JsonPrimitive(arrA.get(1).getAsFloat() + arrB.get(1).getAsFloat()));
+                            newVal.add(new JsonPrimitive(arrA.get(2).getAsFloat() + arrB.get(2).getAsFloat()));
+
+                            val = newVal;
+                        }
+                        case "scale" -> {
+                            JsonArray newVal = new JsonArray();
+
+                            newVal.add(new JsonPrimitive(arrA.get(0).getAsFloat() * arrB.get(0).getAsFloat()));
+                            newVal.add(new JsonPrimitive(arrA.get(1).getAsFloat() * arrB.get(1).getAsFloat()));
+                            newVal.add(new JsonPrimitive(arrA.get(2).getAsFloat() * arrB.get(2).getAsFloat()));
+
+                            val = newVal;
+                        }
+                        default -> val = mergeDisplay(val, other);
+                    }
+                } else {
+                    val = mergeDisplay(val, other);
+                }
+            }
+
+            objA.add(key, val);
+        }
+
+        return objA;
     }
 }
