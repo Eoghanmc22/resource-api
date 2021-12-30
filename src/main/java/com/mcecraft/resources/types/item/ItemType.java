@@ -126,7 +126,7 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder,
 						JsonObject override = new JsonObject();
 
 						JsonObject predicate = new JsonObject();
-						predicate.add("custom_model_data", new JsonPrimitive(cmiCounter++));
+						predicate.add("custom_model_data", new JsonPrimitive(itemResource.getCustomModelId()));
 						override.add("predicate", predicate);
 
 						override.add("model", Utils.toJsonTree(itemResource.getNamespaceID().asString()));
