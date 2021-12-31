@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ItemResource extends Resource {
+public class ItemResource extends Resource implements Comparable<ItemResource> {
 	private final @NotNull Material material;
 	private final @NotNull List<@NotNull IncludedResource> includes;
 	private final @NotNull Data model;
@@ -66,5 +66,10 @@ public class ItemResource extends Resource {
 		}
 
 		return ItemStack.builder(material).meta((meta) -> meta.customModelData(customModelId)).build();
+	}
+
+	@Override
+	public int compareTo(@NotNull ItemResource other) {
+		return Integer.compare(this.getCustomModelId(), other.getCustomModelId());
 	}
 }

@@ -122,6 +122,9 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder,
 
 					JsonArray overrides = new JsonArray();
 
+					// the resources need to be added in order of cmi because minecraft treats cmi as a threshold
+					resources = new TreeSet<>(resources);
+
 					for (ItemResource itemResource : resources) {
 						JsonObject override = new JsonObject();
 
