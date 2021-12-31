@@ -23,6 +23,7 @@ public class SpawnerBlockResourceBuilder extends ResourceBuilder<SpawnerBlockRes
 
     @Override
     protected @NotNull SpawnerBlockResource buildImpl() {
+        // Completion checks in item builder
         return new SpawnerBlockResource(getResourceApi(), getResourceType(), getNamespaceID(), item.build(false));
     }
 
