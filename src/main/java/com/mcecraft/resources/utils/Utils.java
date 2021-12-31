@@ -133,10 +133,12 @@ public class Utils {
                     continue;
                 }
 
-                if ("display".equals(key) && handleDisplay) {
-                    val = mergeEachDisplay(val, other);
-                } else if (other != null) {
-                    val = mergeJson(val, other);
+                if (other != null) {
+                    if ("display".equals(key) && handleDisplay) {
+                        val = mergeEachDisplay(val, other);
+                    } else {
+                        val = mergeJson(val, other);
+                    }
                 }
 
                 objA.add(key, val);
