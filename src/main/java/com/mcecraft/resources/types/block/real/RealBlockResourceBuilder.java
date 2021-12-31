@@ -46,7 +46,7 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
     }
 
     public @NotNull RealBlockResourceBuilder model(@NotNull Data model) {
-        models.add(new ObjectObjectImmutablePair<>(model, BlockModelMeta.from(Utils.prefixPath(getNamespaceID(), "block/"))));
+        models.add(new ObjectObjectImmutablePair<>(model, BlockModelMeta.from(getNamespaceID())));
         return this;
     }
 
