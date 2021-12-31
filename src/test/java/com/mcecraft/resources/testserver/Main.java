@@ -2,11 +2,11 @@ package com.mcecraft.resources.testserver;
 
 import com.mcecraft.resources.DynamicResourcePack;
 import com.mcecraft.resources.ResourceApi;
+import com.mcecraft.resources.types.visual.ArmorStandVisualType;
 import com.mcecraft.resources.utils.PackServer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
-import net.minestom.server.entity.GameMode;
-import net.minestom.server.entity.Player;
+import net.minestom.server.entity.*;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.Instance;
@@ -51,6 +51,12 @@ public class Main {
         for (NamespaceID block : Blocks.REGISTRY.keySet()) {
             System.out.println("Block " + block + " loaded");
         }
+
+        Visuals.init();
+
+        for (NamespaceID visual : Visuals.REGISTRY.keySet()) {
+            System.out.println("Visual " + visual + " loaded");
+        }
     }
 
     private static @NotNull String generatePack() {
@@ -76,5 +82,11 @@ public class Main {
             pl.teleport(new Pos(0, 45, 0));
             pl.setGameMode(GameMode.CREATIVE);
         });
+
+        Entity entity = Visuals.TEST_LARGE.create();
+        entity.setInstance(instance, new Pos(0.5, 41, 0.5).add(ArmorStandVisualType.SPAWN_OFFSET));
+
+        Entity entity2 = Visuals.TEST_SMALL.create();
+        entity2.setInstance(instance, new Pos(1.5, 41, 0.5).add(ArmorStandVisualType.SPAWN_OFFSET_SMALL));
     }
 }
