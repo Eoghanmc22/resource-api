@@ -23,6 +23,9 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        System.setProperty("minestom.extension.indevfolder.classes", "build/classes/java/main/");
+        System.setProperty("minestom.extension.indevfolder.resources", "build/resources/main/");
+
         MinecraftServer init = MinecraftServer.init();
 
         initContent();
