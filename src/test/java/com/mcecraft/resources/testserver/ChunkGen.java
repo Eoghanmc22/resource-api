@@ -1,6 +1,5 @@
 package com.mcecraft.resources.testserver;
 
-import com.mcecraft.resources.testserver.blocks.Blocks;
 import net.minestom.server.instance.ChunkGenerator;
 import net.minestom.server.instance.ChunkPopulator;
 import net.minestom.server.instance.batch.ChunkBatch;

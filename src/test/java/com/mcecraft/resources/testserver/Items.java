@@ -1,4 +1,4 @@
-package com.mcecraft.resources.testserver.items;
+package com.mcecraft.resources.testserver;
 
 import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.ResourceApi;
