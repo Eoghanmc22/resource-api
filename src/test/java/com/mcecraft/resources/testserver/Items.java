@@ -14,27 +14,21 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public record Items(@NotNull ItemResource itemResource) {
+public class Items {
 
-    public @NotNull ItemStack create() {
-        return itemResource.createItemStack();
-    }
+    public static final Map<NamespaceID, ItemResource> REGISTRY = new HashMap<>();
 
-
-    public static final Map<NamespaceID, Items> REGISTRY = new HashMap<>();
-
-    public static final Items TEST1 = new Items(ResourceApi.create(ItemType.INSTANCE, NamespaceID.from("demo:test_item"))
+    public static final ItemResource TEST1 = ResourceApi.create(ItemType.INSTANCE, NamespaceID.from("demo:test_item"))
             .model(Data.of(Path.of("resources/models/test.json")))
             .include(b -> b.file(Loc.of(NamespaceID.from("demo:texture1"), Loc.TEXTURES), Path.of("resources/textures/texture1.png")))
             .material(Material.FIREWORK_ROCKET)
-            .build()
-    );
-    public static final Items TEST2 = new Items(ResourceApi.create(ItemType.INSTANCE, NamespaceID.from("demo:test_item2"))
+            .build();
+
+    public static final ItemResource TEST2 = ResourceApi.create(ItemType.INSTANCE, NamespaceID.from("demo:test_item2"))
             .model(Data.of(Path.of("resources/models/test2.json")))
             .include(b -> b.file(Loc.of(NamespaceID.from("demo:texture4"), Loc.TEXTURES), Path.of("resources/textures/texture4.png")))
             .material(Material.FIREWORK_ROCKET)
-            .build()
-    );
+            .build();
 
 
     public static void init() {
@@ -44,8 +38,8 @@ public record Items(@NotNull ItemResource itemResource) {
         }
     }
 
-    private static void add(@NotNull Items item) {
-        REGISTRY.put(item.itemResource().getNamespaceID(), item);
+    private static void add(@NotNull ItemResource item) {
+        REGISTRY.put(item.getNamespaceID(), item);
     }
 
 }

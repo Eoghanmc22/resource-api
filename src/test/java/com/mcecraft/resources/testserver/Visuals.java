@@ -12,29 +12,23 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public record Visuals(@NotNull ArmorStandVisualResource armorStandVisualResource) {
+public class Visuals {
 
-    public @NotNull Entity create() {
-        return armorStandVisualResource.createEntity();
-    }
+    public static final Map<NamespaceID, ArmorStandVisualResource> REGISTRY = new HashMap<>();
 
-
-    public static final Map<NamespaceID, Visuals> REGISTRY = new HashMap<>();
-
-    public static final Visuals TEST_LARGE = new Visuals(ResourceApi.create(ArmorStandVisualType.INSTANCE, NamespaceID.from("demo:test_visual"))
+    public static final ArmorStandVisualResource TEST_LARGE = ResourceApi.create(ArmorStandVisualType.INSTANCE, NamespaceID.from("demo:test_visual"))
             .model(Data.of(Path.of("resources/models/demo_block.json")))
             // already included
             //.include(b -> b.file(Loc.of(NamespaceID.from("demo:texture2"), Loc.TEXTURES), Path.of("resources/textures/texture2.png")))
-            .build()
-    );
+            .build();
 
-    public static final Visuals TEST_SMALL = new Visuals(ResourceApi.create(ArmorStandVisualType.INSTANCE, NamespaceID.from("demo:test_visual_small"))
+    public static final ArmorStandVisualResource TEST_SMALL = ResourceApi.create(ArmorStandVisualType.INSTANCE, NamespaceID.from("demo:test_visual_small"))
             .model(Data.of(Path.of("resources/models/demo_block.json")))
             // already included
             //.include(b -> b.file(Loc.of(NamespaceID.from("demo:texture2"), Loc.TEXTURES), Path.of("resources/textures/texture2.png")))
             .small(true)
-            .build()
-    );
+            .build();
+
 
     public static void init() {
         if (REGISTRY.isEmpty()) {
@@ -43,8 +37,8 @@ public record Visuals(@NotNull ArmorStandVisualResource armorStandVisualResource
         }
     }
 
-    private static void add(@NotNull Visuals visual) {
-        REGISTRY.put(visual.armorStandVisualResource().getNamespaceID(), visual);
+    private static void add(@NotNull ArmorStandVisualResource visual) {
+        REGISTRY.put(visual.getNamespaceID(), visual);
     }
 
 }

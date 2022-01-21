@@ -77,16 +77,16 @@ public class Main {
             Player pl = event.getPlayer();
 
             pl.setResourcePack(ResourcePack.forced("http://localhost:8081" + PackServer.getPath(packHash), packHash));
-            pl.getInventory().addItemStack(Items.TEST1.create());
-            pl.getInventory().addItemStack(Items.TEST2.create());
+            pl.getInventory().addItemStack(Items.TEST1.createItemStack());
+            pl.getInventory().addItemStack(Items.TEST2.createItemStack());
             pl.teleport(new Pos(0, 45, 0));
             pl.setGameMode(GameMode.CREATIVE);
         });
 
-        Entity entity = Visuals.TEST_LARGE.create();
+        Entity entity = Visuals.TEST_LARGE.createEntity();
         entity.setInstance(instance, new Pos(0.5, 41, 0.5).add(ArmorStandVisualType.SPAWN_OFFSET));
 
-        Entity entity2 = Visuals.TEST_SMALL.create();
+        Entity entity2 = Visuals.TEST_SMALL.createEntity();
         entity2.setInstance(instance, new Pos(1.5, 41, 0.5).add(ArmorStandVisualType.SPAWN_OFFSET_SMALL));
     }
 }

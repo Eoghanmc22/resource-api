@@ -20,13 +20,13 @@ public class ChunkGen implements ChunkGenerator {
             }
         }
         if (chunkX == 0 && chunkZ == 0) {
-            batch.setBlock(0, 44, 0, Blocks.TEST.create());
+            batch.setBlock(0, 44, 0, Blocks.TEST.createBlock());
         }
         if (chunkX == 0 && chunkZ == 0) {
-            batch.setBlock(1, 44, 0, Blocks.TEST2.create());
-            batch.setBlock(2, 44, 0, Blocks.TEST2.create());
-            batch.setBlock(3, 44, 0, Blocks.TEST2.create());
-            batch.setBlock(4, 44, 0, Blocks.TEST2.create());
+            batch.setBlock(1, 44, 0, Blocks.TEST2.createBlock());
+            batch.setBlock(2, 44, 0, Blocks.TEST2.createBlock());
+            batch.setBlock(3, 44, 0, Blocks.TEST2.createBlock());
+            batch.setBlock(4, 44, 0, Blocks.TEST2.createBlock());
         }
     }
 
