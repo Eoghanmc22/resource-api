@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public interface Json extends Data {
-    static @NotNull Json of(@NotNull Data data) {
+    static @NotNull Json data(@NotNull Data data) {
         if (data instanceof Json json) {
             return json;
         }
@@ -31,7 +31,7 @@ public interface Json extends Data {
         });
     }
 
-    static @NotNull Json of(@NotNull Path path) {
+    static @NotNull Json path(@NotNull Path path) {
         return lazy(new Json() {
             final Once<String> data = new Once<>(() -> {
                 try {
@@ -43,7 +43,7 @@ public interface Json extends Data {
 
             @Override
             public @NotNull JsonElement json() {
-                return Json.of(data.get()).json();
+                return Json.str(data.get()).json();
             }
 
             @Override
@@ -53,7 +53,7 @@ public interface Json extends Data {
         });
     }
 
-    static @NotNull Json of(@NotNull String data) {
+    static @NotNull Json str(@NotNull String data) {
         return lazy(new Json() {
             @Override
             public @NotNull JsonElement json() {
@@ -67,7 +67,7 @@ public interface Json extends Data {
         });
     }
 
-    static @NotNull Json of(@NotNull JsonElement jsonElement) {
+    static @NotNull Json json(@NotNull JsonElement jsonElement) {
         return lazy(() -> jsonElement);
     }
 

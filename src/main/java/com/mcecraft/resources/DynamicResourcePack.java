@@ -20,8 +20,11 @@ public class DynamicResourcePack {
     private volatile @UnknownNullability String hash = null;
 
     public void include(@NotNull Loc path, @NotNull Data data) {
-        if (resourcePackIncludedFiles.put(path, data) != null) {
-            throw new RuntimeException("Duplicate file `" + path.getPath() + "` in resource pack!");
+        Data old;
+        if ((old = resourcePackIncludedFiles.put(path, data)) != null) {
+            if (Arrays.hashCode(data.bytes()) != Arrays.hashCode(old.bytes())) {
+                throw new RuntimeException("Multiple, non-matching files with name of `" + path.getPath() + "` in resource pack!");
+            }
         }
     }
 

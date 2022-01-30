@@ -10,7 +10,11 @@ import java.nio.file.Path;
 
 public interface Data {
 
-    static @NotNull Data of(@NotNull Path path) {
+    static @NotNull Data path(@NotNull String path) {
+        return path(Path.of(path));
+    }
+
+    static @NotNull Data path(@NotNull Path path) {
         return lazy(() -> {
             try {
                 return Files.readAllBytes(path);
@@ -20,7 +24,7 @@ public interface Data {
         });
     }
 
-    static @NotNull Data ofResource(@NotNull String path) {
+    static @NotNull Data resource(@NotNull String path) {
         return lazy(() -> {
             try (InputStream is = Utils.resourceInputStream(path)) {
                 return is.readAllBytes();
@@ -30,12 +34,12 @@ public interface Data {
         });
     }
 
-    static @NotNull Data of(@NotNull String data) {
+    static @NotNull Data str(@NotNull String data) {
         byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
         return () -> bytes;
     }
 
-    static @NotNull Data of(byte @NotNull [] data) {
+    static @NotNull Data bytes(byte @NotNull [] data) {
         return () -> data;
     }
 

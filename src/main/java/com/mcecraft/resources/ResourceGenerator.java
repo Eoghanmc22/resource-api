@@ -46,7 +46,7 @@ public class ResourceGenerator {
         DynamicResourcePack resourcePack = new DynamicResourcePack();
         GlobalPersistenceStore data = loadDataStores();
 
-        resourcePack.include(Loc.any("pack.mcmeta"), Data.of("{\"pack\":{\"pack_format\":8,\"description\":\"" + packDescription + "\"}}"));
+        resourcePack.include(Loc.any("pack.mcmeta"), Data.str("{\"pack\":{\"pack_format\":8,\"description\":\"" + packDescription + "\"}}"));
 
         Map<ResourceType<?, ?, ?>, Generator<?, ?>> generatorMap = new HashMap<>();
 

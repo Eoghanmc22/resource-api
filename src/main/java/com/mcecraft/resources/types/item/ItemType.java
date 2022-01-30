@@ -140,9 +140,9 @@ public class ItemType implements ResourceType<ItemResource, ItemResourceBuilder,
 
 					Loc resourceLocation = Loc.of(namespace, Loc.MODELS);
 
-					JsonElement vanilla = Json.of(DefaultResourcePack.get(resourceLocation)).json();
+					JsonElement vanilla = Json.data(DefaultResourcePack.get(resourceLocation)).json();
 
-					rp.include(resourceLocation, Json.of(Utils.mergeJson(vanilla, custom)));
+					rp.include(resourceLocation, Json.json(Utils.mergeJson(vanilla, custom)));
 				}
 			}
 		};

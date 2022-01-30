@@ -38,8 +38,8 @@ public class SpawnerBlockType implements ResourceType<SpawnerBlockResource, Spaw
 
             @Override
             public void generate(@NotNull ResourceGenerator api, @NotNull DynamicResourcePack rp, @NotNull PersistenceProvider<NullPersistenceStore> _store) {
-                rp.include(Loc.of(NamespaceID.from("resource_api", "clear"), Loc.TEXTURES), Data.ofResource("/clear.png"));
-                rp.include(Loc.of(NamespaceID.from("block/spawner"), Loc.MODELS), Data.ofResource("/hide_spawner.json"));
+                rp.include(Loc.of(NamespaceID.from("resource_api", "clear"), Loc.TEXTURES), Data.resource("/clear.png"));
+                rp.include(Loc.of(NamespaceID.from("block/spawner"), Loc.MODELS), Data.resource("/hide_spawner.json"));
             }
         };
     }

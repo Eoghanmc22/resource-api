@@ -4,6 +4,7 @@ import com.mcecraft.resources.ResourceGenerator;
 import com.mcecraft.resources.utils.Data;
 import com.mcecraft.resources.ResourceBuilder;
 import com.mcecraft.resources.ResourceType;
+import com.mcecraft.resources.utils.Include;
 import com.mcecraft.resources.utils.Loc;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
@@ -35,11 +36,18 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 	}
 
 	public @NotNull IncludedResourceBuilder file(@NotNull Loc loc, @NotNull Path file) {
-		return data(loc, Data.of(file));
+		return data(loc, Data.path(file));
 	}
 
 	public @NotNull IncludedResourceBuilder text(@NotNull Loc loc, @NotNull String text) {
-		return data(loc, Data.of(text));
+		return data(loc, Data.str(text));
+	}
+
+	public @NotNull IncludedResourceBuilder include(Include @NotNull... includes) {
+		for (Include include : includes) {
+			data(include.loc(), include.data());
+		}
+		return this;
 	}
 
 }

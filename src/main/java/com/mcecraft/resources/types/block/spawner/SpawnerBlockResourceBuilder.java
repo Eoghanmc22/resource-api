@@ -5,6 +5,7 @@ import com.mcecraft.resources.types.include.IncludedResourceBuilder;
 import com.mcecraft.resources.types.item.ItemResourceBuilder;
 import com.mcecraft.resources.types.item.ItemType;
 import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Include;
 import com.mcecraft.resources.utils.Json;
 import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.item.Material;
@@ -27,9 +28,14 @@ public class SpawnerBlockResourceBuilder extends ResourceBuilder<SpawnerBlockRes
         return new SpawnerBlockResource(getResourceApi(), getResourceType(), getNamespaceID(), item.build(false));
     }
 
-    public @NotNull SpawnerBlockResourceBuilder model(@NotNull Data model) {
+    public @NotNull SpawnerBlockResourceBuilder model(@NotNull Data model, @NotNull Include... includes) {
         // inject the correct display settings
-        item.model(Json.lazy(() -> Utils.mergeJson(Json.of(model).json(), SpawnerBlockType.DISPLAY_SETTINGS)));
+        item.model(Json.lazy(() -> Utils.mergeJson(Json.data(model).json(), SpawnerBlockType.DISPLAY_SETTINGS)));
+
+        if (includes != null && includes.length > 0) {
+            include(includedResourceBuilder -> includedResourceBuilder.include(includes));
+        }
+
         return this;
     }
 

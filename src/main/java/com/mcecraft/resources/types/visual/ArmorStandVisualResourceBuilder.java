@@ -7,6 +7,7 @@ import com.mcecraft.resources.types.include.IncludedResourceBuilder;
 import com.mcecraft.resources.types.item.ItemResourceBuilder;
 import com.mcecraft.resources.types.item.ItemType;
 import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Include;
 import com.mcecraft.resources.utils.Json;
 import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.item.Material;
@@ -29,14 +30,18 @@ public class ArmorStandVisualResourceBuilder extends ResourceBuilder<ArmorStandV
     @Override
     protected @NotNull ArmorStandVisualResource buildImpl() {
         // inject the correct display settings
-        item.model(Json.lazy(() -> Utils.mergeJson(Json.of(model).json(), isSmall ? ArmorStandVisualType.DISPLAY_SETTINGS_SMALL : ArmorStandVisualType.DISPLAY_SETTINGS)));
+        item.model(Json.lazy(() -> Utils.mergeJson(Json.data(model).json(), isSmall ? ArmorStandVisualType.DISPLAY_SETTINGS_SMALL : ArmorStandVisualType.DISPLAY_SETTINGS)));
 
         // Completion checks in item builder
         return new ArmorStandVisualResource(getResourceApi(), getResourceType(), getNamespaceID(), item.build(false), isSmall);
     }
 
-    public @NotNull ArmorStandVisualResourceBuilder model(@NotNull Data model) {
+    public @NotNull ArmorStandVisualResourceBuilder model(@NotNull Data model, @NotNull Include... includes) {
         this.model = model;
+
+        if (includes != null && includes.length > 0) {
+            include(includedResourceBuilder -> includedResourceBuilder.include(includes));
+        }
         return this;
     }
 

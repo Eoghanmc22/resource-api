@@ -6,6 +6,7 @@ import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.types.include.IncludedResource;
 import com.mcecraft.resources.types.include.IncludedResourceBuilder;
 import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Include;
 import com.mcecraft.resources.utils.Utils;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
@@ -40,18 +41,22 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
         return this;
     }
 
+    public @NotNull RealBlockResourceBuilder model(@NotNull Data model, @NotNull Include... includes) {
+        return model(model, BlockModelMeta.from(getNamespaceID()), includes);
+    }
+
+    public @NotNull RealBlockResourceBuilder model(@NotNull Data model, BlockModelMeta meta, @NotNull Include... includes) {
+        models.add(new ObjectObjectImmutablePair<>(model, meta));
+
+        if (includes != null && includes.length > 0) {
+            include(includedResourceBuilder -> includedResourceBuilder.include(includes));
+        }
+        
+        return this;
+    }
+
     public @NotNull RealBlockResourceBuilder include(@NotNull UnaryOperator<@NotNull IncludedResourceBuilder> resource) {
         includes.add(resource.apply(getResourceApi().create(IncludeType.INSTANCE, Utils.INTERNAL)).build(false));
-        return this;
-    }
-
-    public @NotNull RealBlockResourceBuilder model(@NotNull Data model) {
-        models.add(new ObjectObjectImmutablePair<>(model, BlockModelMeta.from(getNamespaceID())));
-        return this;
-    }
-
-    public @NotNull RealBlockResourceBuilder model(@NotNull Data model, BlockModelMeta meta) {
-        models.add(new ObjectObjectImmutablePair<>(model, meta));
         return this;
     }
 

@@ -4,7 +4,7 @@ import com.mcecraft.resources.ResourceApi;
 import com.mcecraft.resources.types.visual.ArmorStandVisualResource;
 import com.mcecraft.resources.types.visual.ArmorStandVisualType;
 import com.mcecraft.resources.utils.Data;
-import net.minestom.server.entity.Entity;
+import com.mcecraft.resources.utils.Include;
 import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,15 +17,17 @@ public class Visuals {
     public static final Map<NamespaceID, ArmorStandVisualResource> REGISTRY = new HashMap<>();
 
     public static final ArmorStandVisualResource TEST_LARGE = ResourceApi.create(ArmorStandVisualType.INSTANCE, NamespaceID.from("demo:test_visual"))
-            .model(Data.of(Path.of("resources/models/demo_block.json")))
-            // already included
-            //.include(b -> b.file(Loc.of(NamespaceID.from("demo:texture2"), Loc.TEXTURES), Path.of("resources/textures/texture2.png")))
+            .model(
+                    Data.path("resources/models/demo_block.json"),
+                    Include.tex("demo:texture2", "resources/textures/texture2.png")
+            )
             .build();
 
     public static final ArmorStandVisualResource TEST_SMALL = ResourceApi.create(ArmorStandVisualType.INSTANCE, NamespaceID.from("demo:test_visual_small"))
-            .model(Data.of(Path.of("resources/models/demo_block.json")))
-            // already included
-            //.include(b -> b.file(Loc.of(NamespaceID.from("demo:texture2"), Loc.TEXTURES), Path.of("resources/textures/texture2.png")))
+            .model(
+                    Data.path("resources/models/demo_block.json"),
+                    Include.tex("demo:texture2", "resources/textures/texture2.png")
+            )
             .small(true)
             .build();
 

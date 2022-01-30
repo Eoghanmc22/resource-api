@@ -153,7 +153,7 @@ public class RealBlockResourceType implements ResourceType<RealBlockResource, Re
                     }
                     blockStates.add("variants", variants);
 
-                    rp.include(Loc.of(blockType.namespace(), Loc.BLOCK_STATES), Json.of(blockStates));
+                    rp.include(Loc.of(blockType.namespace(), Loc.BLOCK_STATES), Json.json(blockStates));
                 }
             }
 

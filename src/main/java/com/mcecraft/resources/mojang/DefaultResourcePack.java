@@ -174,9 +174,9 @@ public class DefaultResourcePack {
         }
 
         if (jsonMatcher.matches(path)) {
-            return Json.of(path);
+            return Json.path(path);
         } else {
-            return Data.of(path);
+            return Data.path(path);
         }
     }
 

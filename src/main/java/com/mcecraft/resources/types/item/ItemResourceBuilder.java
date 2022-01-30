@@ -5,6 +5,7 @@ import com.mcecraft.resources.types.include.IncludeType;
 import com.mcecraft.resources.types.include.IncludedResource;
 import com.mcecraft.resources.types.include.IncludedResourceBuilder;
 import com.mcecraft.resources.utils.Data;
+import com.mcecraft.resources.utils.Include;
 import com.mcecraft.resources.utils.Utils;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.NamespaceID;
@@ -40,8 +41,13 @@ public class ItemResourceBuilder extends ResourceBuilder<ItemResource> {
 		return this;
 	}
 
-	public @NotNull ItemResourceBuilder model(@NotNull Data model) {
+	public @NotNull ItemResourceBuilder model(@NotNull Data model, @NotNull Include... includes) {
 		this.model = model;
+
+		if (includes != null && includes.length > 0) {
+			include(includedResourceBuilder -> includedResourceBuilder.include(includes));
+		}
+
 		return this;
 	}
 
