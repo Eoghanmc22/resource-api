@@ -17,8 +17,8 @@ public class PackServer {
 
     private final HttpServer httpServer;
     private final HashMap<String, String> hostedPacks = new HashMap<>();
-    private String pathPrefix = "";
-    private InetSocketAddress addr = null;
+    private @NotNull String pathPrefix = "";
+    private @Nullable InetSocketAddress addr = null;
 
     public PackServer() {
         try {

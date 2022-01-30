@@ -18,7 +18,7 @@ import java.util.function.UnaryOperator;
 
 public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource> {
 
-    private BlockReplacement blockReplacement = BlockReplacement.NOTE_BLOCK;
+    private @NotNull BlockReplacement blockReplacement = BlockReplacement.NOTE_BLOCK;
     private final List<IncludedResource> includes = new ArrayList<>();
     private final Set<Pair<Data, BlockModelMeta>> models = new HashSet<>();
 
@@ -45,13 +45,13 @@ public class RealBlockResourceBuilder extends ResourceBuilder<RealBlockResource>
         return model(model, BlockModelMeta.from(getNamespaceID()), includes);
     }
 
-    public @NotNull RealBlockResourceBuilder model(@NotNull Data model, BlockModelMeta meta, @NotNull Include... includes) {
+    public @NotNull RealBlockResourceBuilder model(@NotNull Data model, @NotNull BlockModelMeta meta, @NotNull Include... includes) {
         models.add(new ObjectObjectImmutablePair<>(model, meta));
 
         if (includes != null && includes.length > 0) {
             include(includedResourceBuilder -> includedResourceBuilder.include(includes));
         }
-        
+
         return this;
     }
 

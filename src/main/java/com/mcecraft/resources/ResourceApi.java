@@ -19,7 +19,7 @@ public class ResourceApi extends Extension {
     public static final ResourceGenerator GLOBAL_PACK = new ResourceGenerator();
     public static final PackServer GLOBAL_SERVER = new PackServer();
 
-    private static String packHash = null;
+    private static @Nullable String packHash = null;
 
     @Override
     public void initialize() {
@@ -54,7 +54,7 @@ public class ResourceApi extends Extension {
         return GLOBAL_PACK.generateResourcePack(packDescription);
     }
 
-    public static ResourcePack getResourcePack(@NotNull String publicIp, int publicPort) {
+    public static @NotNull ResourcePack getResourcePack(@NotNull String publicIp, int publicPort) {
         String hash = packHash;
         Check.notNull(hash, "Resource pack not generated yet");
         String url = "http://" + publicIp + ":" + publicPort + GLOBAL_SERVER.getPath(hash);
