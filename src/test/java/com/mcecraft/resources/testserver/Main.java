@@ -1,18 +1,14 @@
 package com.mcecraft.resources.testserver;
 
-import com.mcecraft.resources.DynamicResourcePack;
 import com.mcecraft.resources.ResourceApi;
 import com.mcecraft.resources.types.visual.ArmorStandVisualType;
-import com.mcecraft.resources.utils.PackServer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.*;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.Instance;
-import net.minestom.server.resourcepack.ResourcePack;
 import net.minestom.server.utils.NamespaceID;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +20,9 @@ public class Main {
         System.setProperty("minestom.extension.indevfolder.classes", "build/classes/java/main/");
         System.setProperty("minestom.extension.indevfolder.resources", "build/resources/main/");
 
-        MinecraftServer init = MinecraftServer.init();
-
         initContent();
 
-        String packHash = generatePack();
-        log.info("Pack hash is {}", packHash);
-
-        initMinestom(packHash);
-
-        init.start("0.0.0.0", 25565);
-        PackServer.start("0.0.0.0", 8081);
+        initMinestom();
 
         Runtime.getRuntime().addShutdownHook(new Thread(MinecraftServer::stopCleanly));
     }
@@ -59,13 +47,9 @@ public class Main {
         }
     }
 
-    private static @NotNull String generatePack() {
-        DynamicResourcePack resourcePack = ResourceApi.generateResourcePack("A demo resource pack");
-        PackServer.hostPack(resourcePack);
-        return resourcePack.getHash();
-    }
+    private static void initMinestom() {
+        MinecraftServer server = MinecraftServer.init();
 
-    private static void initMinestom(String packHash) {
         // setup instance
         Instance instance = MinecraftServer.getInstanceManager().createInstanceContainer();
         instance.setChunkGenerator(new ChunkGen());
@@ -76,12 +60,14 @@ public class Main {
         MinecraftServer.getGlobalEventHandler().addListener(PlayerSpawnEvent.class, (event) -> {
             Player pl = event.getPlayer();
 
-            pl.setResourcePack(ResourcePack.forced("http://localhost:8081" + PackServer.getPath(packHash), packHash));
+            pl.setResourcePack(ResourceApi.getResourcePack("localhost", ResourceApi.DEFAULT_PORT));
             pl.getInventory().addItemStack(Items.TEST1.createItemStack());
             pl.getInventory().addItemStack(Items.TEST2.createItemStack());
             pl.teleport(new Pos(0, 45, 0));
             pl.setGameMode(GameMode.CREATIVE);
         });
+
+        server.start("0.0.0.0", 25565);
 
         Entity entity = Visuals.TEST_LARGE.createEntity();
         entity.setInstance(instance, new Pos(0.5, 41, 0.5).add(ArmorStandVisualType.SPAWN_OFFSET));

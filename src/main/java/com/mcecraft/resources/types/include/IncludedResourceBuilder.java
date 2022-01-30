@@ -29,22 +29,17 @@ public class IncludedResourceBuilder extends ResourceBuilder<IncludedResource> {
 		return new IncludedResource(getResourceApi(), getResourceType(), getNamespaceID(), resources);
 	}
 
-	public @NotNull IncludedResourceBuilder file(@NotNull Loc loc, @NotNull Path file) {
-		resources.put(loc, Data.of(file));
-
+	public @NotNull IncludedResourceBuilder data(@NotNull Loc loc, @NotNull Data data) {
+		resources.put(loc, data);
 		return this;
 	}
 
-	public @NotNull IncludedResourceBuilder data(@NotNull Loc loc, @NotNull Data data) {
-		resources.put(loc, data);
-
-		return this;
+	public @NotNull IncludedResourceBuilder file(@NotNull Loc loc, @NotNull Path file) {
+		return data(loc, Data.of(file));
 	}
 
 	public @NotNull IncludedResourceBuilder text(@NotNull Loc loc, @NotNull String text) {
-		resources.put(loc, Data.of(text));
-
-		return this;
+		return data(loc, Data.of(text));
 	}
 
 }

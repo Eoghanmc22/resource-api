@@ -29,7 +29,7 @@ public class Loc implements Comparable<Loc> {
             extension = ".png";
         }
 
-        this.path = "assets/" + namespace.getDomain() + "/" + type + "/" + namespace.getPath() + extension;
+        this.path = "assets/" + namespace.namespace() + "/" + type + "/" + namespace.path() + extension;
     }
 
     private Loc(@NotNull String path) {

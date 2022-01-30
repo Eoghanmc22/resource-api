@@ -1,6 +1,7 @@
 package com.mcecraft.resources.utils;
 
 import com.mcecraft.resources.DynamicResourcePack;
+import com.mcecraft.resources.ResourceApi;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -14,12 +15,12 @@ import java.util.HashMap;
 
 public class PackServer {
 
-    private static final HttpServer httpServer;
-    private static final HashMap<String, String> hostedPacks = new HashMap<>();
-    private static String pathPrefix = "";
-    private static InetSocketAddress addr = null;
+    private final HttpServer httpServer;
+    private final HashMap<String, String> hostedPacks = new HashMap<>();
+    private String pathPrefix = "";
+    private InetSocketAddress addr = null;
 
-    static {
+    public PackServer() {
         try {
             httpServer = HttpServer.create();
         } catch (IOException e) {
@@ -27,8 +28,11 @@ public class PackServer {
         }
     }
 
+    public void start() {
+        start(ResourceApi.DEFAULT_ADDRESS, ResourceApi.DEFAULT_PORT);
+    }
 
-    public static void start(@NotNull String address, int port) {
+    public void start(@NotNull String address, int port) {
         if (addr != null) {
             throw new RuntimeException("The PackServer has already been started");
         }
@@ -38,25 +42,28 @@ public class PackServer {
         try {
             httpServer.bind(addr, 0);
 
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.stop(5)));
             httpServer.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void hostPack(@NotNull DynamicResourcePack rp) {
+    public void stop() {
+        httpServer.stop(5);
+    }
+
+    public void hostPack(@NotNull DynamicResourcePack rp) {
         String contextPath = getContextPath(rp);
 
         httpServer.createContext(contextPath, getHandler(rp));
         hostedPacks.put(rp.getHash(), contextPath);
     }
 
-    private static @NotNull String getContextPath(@NotNull DynamicResourcePack rp) {
+    private @NotNull String getContextPath(@NotNull DynamicResourcePack rp) {
         return "/" + pathPrefix + rp.getHash() + ".zip";
     }
 
-    private static @NotNull HttpHandler getHandler(@NotNull DynamicResourcePack rp) {
+    private @NotNull HttpHandler getHandler(@NotNull DynamicResourcePack rp) {
         byte[] resourcePackBin = rp.getBytes();
 
         return exchange1 -> {
@@ -72,15 +79,15 @@ public class PackServer {
         };
     }
 
-    public static @NotNull String getPathPrefix() {
+    public @NotNull String getPathPrefix() {
         return pathPrefix;
     }
 
-    public static void setPathPrefix(@NotNull String pathPrefix) {
-        PackServer.pathPrefix = pathPrefix;
+    public void setPathPrefix(@NotNull String pathPrefix) {
+        this.pathPrefix = pathPrefix;
     }
 
-    public static @Nullable String getPath(@NotNull String hash) {
+    public @Nullable String getPath(@NotNull String hash) {
         return hostedPacks.get(hash);
     }
 }
